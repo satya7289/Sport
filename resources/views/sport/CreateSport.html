@@ -11,15 +11,19 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="#" method="post">
+            <form action="{% url 'add_sport' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
                 <div class="modal-body">
-                    
                         <div class="form-row">
                             <div class="form-group col-md-12">
-                                    <label for="inputEmail4">Sport</label>
-                                    <input type="text" class="form-control" id="inputEmail4" placeholder="Sport Name" required>
+                                    <label for="name">Sport</label>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Sport Name" required>
                             </div>
                             <!-- image field -->
+                            <div class="form-group col-md-12">
+                                    <label for="image">Image</label>
+                                    <input type="file" id="image" name="image" accept="image/png, image/jpeg">
+                            </div>
                         </div>
                     
                 </div>

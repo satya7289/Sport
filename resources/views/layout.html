@@ -67,15 +67,11 @@
                     <i class="fas fa-angle-down fa-pull-right"></i>
                 </a>
                 <ul class="collapse list-unstyled" id="homeSubmenu">
+                    {% for item in sport %}
                     <li>
-                        <a href="#">Item1</a>
+                        <a href="{% url 'list_item' item_pk=item.id %}">{{item.name}}</a>
                     </li>
-                     <li>
-                        <a href="#">Item1</a>
-                    </li>
-                    <li>
-                        <a href="#">Item1</a>
-                    </li>
+                    {% endfor %}
                     <li>  
                        {% include 'sport/CreateSport.html' %} 
                     </li>
@@ -109,44 +105,39 @@
 </div>
 
 
-    <!-- Required common Js -->
-    <script src="{% static 'js/jquery-2.2.3.min.js' %}"></script>
-    <!-- //Required common Js -->
-
-
-
-    <!-- Sidebar-nav Js -->
-    <script>
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
+<script src="{% static 'js/jquery-2.2.3.min.js' %}"></script>
+<!-- Sidebar-nav Js -->
+<script>
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
         });
-    </script>
-    <!--// Sidebar-nav Js -->
+    });
+</script>
+<!--// Sidebar-nav Js -->
 
-    <!-- dropdown nav -->
-    <script>
-        $(document).ready(function () {
-            $(".dropdown").hover(
-                function () {
-                    $('.dropdown-menu', this).stop(true, true).slideDown("fast");
-                    $(this).toggleClass('open');
-                },
-                function () {
-                    $('.dropdown-menu', this).stop(true, true).slideUp("fast");
-                    $(this).toggleClass('open');
-                }
-            );
-        });
-    </script>
-    <!-- //dropdown nav -->
+<!-- dropdown nav -->
+<script>
+    $(document).ready(function () {
+        $(".dropdown").hover(
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideDown("fast");
+                $(this).toggleClass('open');
+            },
+            function () {
+                $('.dropdown-menu', this).stop(true, true).slideUp("fast");
+                $(this).toggleClass('open');
+            }
+        );
+    });
+</script>
+<!-- //dropdown nav -->
 
-    <!-- Js for bootstrap working-->
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!-- //Js for bootstrap working -->
+<!-- Js for bootstrap working-->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- //Js for bootstrap working -->
 
-    {% block script %}{% endblock %}
+{% block script %}{% endblock %}
 
 </body>
 
