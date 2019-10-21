@@ -73,7 +73,7 @@
                 </a>
             </li>
             <li>
-                <a href="#sport" data-toggle="collapse" aria-expanded="false" onclick="AllSport()" data-host="http://127.0.0.1:8000/api/allsport" id="sport-main">
+                <a href="#sport" data-toggle="collapse" aria-expanded="false" onclick="AllSport()" id="sport-main">
                     <i class="fas fa-volleyball-ball"></i>
                     Sports
                     <i class="fas fa-angle-down fa-pull-right"></i>
@@ -131,7 +131,7 @@
 
 function AllSport(){
     var sport = document.getElementById("sport-main");
-    var url = sport.getAttribute("data-host");
+    var url ="{% url 'all_sport' %}";
     var ul = document.getElementById("sport");
     var xhr = new XMLHttpRequest;
     var content ="";
