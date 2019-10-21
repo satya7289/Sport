@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic import CreateView
 from django.views.generic import ListView
+from django.views.generic import UpdateView
 from django.views.generic import View
 from django.urls import reverse_lazy
 
 from .models import Sport
 from .models import Item
+from .models import Student
 
 class HomeView(View):
     template_name = 'layout.html'
@@ -64,9 +66,20 @@ class ItemListView(View):
         items = list(Item.objects.filter(sport_type=sport).values())
         return render(request,self.template_name,{'items':items,'id':id})
 
+class StudentListView(View):
+    template_name   ='student/Students.html'
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template_name)
+        
 
-# class SportCreate(CreateView):
-#     model           = Sport
-#     template_name   = ''
-#     fields          ='__all__'
-#     success_url = reverse_lazy('#')
+class StudentCreateView(View):
+    template_name ='student/CreateStudent.html'
+    def get(self, request, *args, **kwargs):
+        pass
+    def post(self, request, *args, **kwargs):
+        pass
+
+class CheckoutView(View):
+    template_name   ='checkout/Checkout.html'
+    def get(self, request, *args, **kwargs):
+        return render(request,self.template_name)
