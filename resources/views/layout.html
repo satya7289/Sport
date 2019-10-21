@@ -73,7 +73,7 @@
                 </a>
             </li>
             <li>
-                <a href="#sport" data-toggle="collapse" aria-expanded="false" onclick="AllSport()" id="sport-main">
+                <a href="#sport" data-toggle="collapse" aria-expanded="false" id="sport-main">
                     <i class="fas fa-volleyball-ball"></i>
                     Sports
                     <i class="fas fa-angle-down fa-pull-right"></i>
@@ -129,8 +129,8 @@
 
 <script>
 
-function AllSport(){
-    var sport = document.getElementById("sport-main");
+var sport = document.getElementById("sport-main");
+sport.addEventListener("click",()=>{
     var url ="{% url 'all_sport' %}";
     var ul = document.getElementById("sport");
     var xhr = new XMLHttpRequest;
@@ -153,8 +153,12 @@ function AllSport(){
         }
     }
     xhr.send();
-    
-}
+});
+
+
+// name.addEventListener("onkeyup",()=>{
+//     console.log(name.value);
+// });
 
 </script>
 

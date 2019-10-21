@@ -5,6 +5,7 @@ from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.views.generic import View
 from django.urls import reverse_lazy
+from django.contrib import messages
 
 from .models import Sport
 from .models import Item
@@ -21,14 +22,19 @@ class SportCreateView(View):
     def post(self,request):
         if request.method=="POST":
             name = request.POST.get("name")
+            id = 1      # Default Id 
             image = None
             if  request.FILES:
                 image = request.FILES.get("image")
             print(name,image)
+            if Sport.objects.filter(name=name):
+                messages.error(request,"Sport Name Already Exit.")
+                return redirect('home')
             sport = Sport(name=name,image=image)
             # sport.save()
-            sport   = list(Sport.objects.values())
-            return redirect('home')
+            if sport.id:
+                id = sport.id
+            return redirect('list_item',id)
             # return reverse_lazy('home')
 
 

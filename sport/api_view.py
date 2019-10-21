@@ -9,6 +9,25 @@ def GetAllSport(request):
         data = { i : sport[i] for i in range(0, len(sport)) }
         return JsonResponse(data)
 
+def GetSport(request, *args, **kwargs):
+    if request.method=="GET":
+        sport_name = request.GET.get("name")
+        # sport_name = kwargs['name']
+        status =0
+        message = ""
+        if Sport.objects.filter(name=sport_name):
+            status = 1
+            message = "Sport Name Already Exits."
+        else:
+            status = 0
+            message ="Sport Name Not Exits in Database."
+        data ={
+            'status':status,
+            'message':message
+        }
+        return JsonResponse(data)
+        
+
 def GetAllItem(request, *args, **kwargs):
     if request.method=="GET":
         # sport = request.GET.get("name")
