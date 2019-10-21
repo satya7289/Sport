@@ -1,12 +1,12 @@
-<a href="#" data-toggle="modal" data-target="#exampleModal">
+<a href="#" data-toggle="modal" data-target="#sportModal">
     <i class="fas fa-plus-circle"></i>Add
 </a>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="sportModal" tabindex="-1" role="dialog" aria-labelledby="sportModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Sport</h5>
+                <h5 class="modal-title" id="sportModalLabel">Add Sport</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -17,7 +17,14 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                     <label for="name">Sport</label>
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Sport Name" required>
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Sport Name" onkeyup="CheckSport()" required>
+                                    <small id="nameHelpText" class="form-text text-danger">
+                                    </small>
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                           <script>alert("{{message}}");</script> 
+                                        {% endfor %}
+                                    {% endif %}
                             </div>
                             <!-- image field -->
                             <div class="form-group col-md-12">
@@ -35,3 +42,35 @@
         </div>
     </div>
 </div>
+
+<script>
+
+var timer;
+function CheckSport(){
+    var name    = document.getElementById("name");
+    var message = document.getElementById("nameHelpText");
+    var url   = "{% url 'sport' %}";
+    var xhr     = new XMLHttpRequest;
+    
+    clearTimeout(timer);
+    timer=setTimeout( ()=>{ 
+        url += "?name=";
+        url += name.value;
+        xhr.open('GET',url,true);
+        xhr.onload = function(){
+            if(this.status==200){
+                var response = JSON.parse(this.responseText);
+                if(response['status']=="1"){
+                    message.innerHTML = response['message'];
+                }
+                else{
+                    message.innerHTML=""
+                }
+            }
+        }
+        xhr.send();
+    },1000  
+    );
+    
+}
+</script>

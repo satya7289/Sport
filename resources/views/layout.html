@@ -48,7 +48,7 @@
     <nav id="sidebar" class="nav--side">
         <div class="sidebar-header">
             <h1>
-                <a href="#">Sports</a>
+                <a href="{% url 'home' %}">Sports</a>
             </h1>
             <span>S</span>
         </div>
@@ -61,42 +61,30 @@
                 </a>
             </li>
             <li>
-                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false">
+                <a href="{% url 'checkout' %}">
+                    <i class="fas fa-shopping-cart"></i>
+                    Checkout
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'students' %}">
+                    <i class="fas fa-users"></i>
+                    Student
+                </a>
+            </li>
+            <li>
+                <a href="#sport" data-toggle="collapse" aria-expanded="false" id="sport-main">
                     <i class="fas fa-volleyball-ball"></i>
                     Sports
                     <i class="fas fa-angle-down fa-pull-right"></i>
                 </a>
-                <ul class="collapse list-unstyled" id="homeSubmenu">
-                    {% for item in sport %}
-                    <li>
-                        <a href="{% url 'list_item' item_pk=item.id %}">{{item.name}}</a>
-                    </li>
-                    {% endfor %}
+                <ul class="collapse list-unstyled" id="sport">
+
                     <li>  
-                       {% include 'sport/CreateSport.html' %} 
+                        {% include 'sport/CreateSport.html' %} 
                     </li>
                 </ul>
             </li>
-
-            <li>
-                <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false">
-                    <i class="fas fa-users"></i>
-                    User
-                    <i class="fas fa-angle-down fa-pull-right"></i>
-                </a>
-                <ul class="collapse list-unstyled" id="pageSubmenu3">
-                    <li>
-                        <a href="#">Login</a>
-                    </li>
-                    <li>
-                        <a href="#">Register</a>
-                    </li>
-                    <li>
-                        <a href="#">Forgot password</a>
-                    </li>
-                </ul>
-            </li>
-
         </ul>
     </nav>
     <div id="content">
@@ -138,6 +126,41 @@
 <!-- //Js for bootstrap working -->
 
 {% block script %}{% endblock %}
+
+<script>
+
+var sport = document.getElementById("sport-main");
+sport.addEventListener("click",()=>{
+    var url ="{% url 'all_sport' %}";
+    var ul = document.getElementById("sport");
+    var xhr = new XMLHttpRequest;
+    var content ="";
+    var last= ul.lastElementChild.outerHTML;
+    
+    xhr.open('GET',url,true);
+    xhr.onload = function(){
+        if(this.status==200){
+            var response = JSON.parse(this.responseText);
+            for(var res in response){
+                const id = response[res]["id"];
+                var href ="{% url 'list_item' item_pk=12345 %}".replace(/12345/, id.toString());
+                content += " <li><a href="+href+">"+response[res]["name"]+"</a></li>";
+                // console.log(id);
+            }
+            content += last;
+            // console.log(content);
+            ul.innerHTML = content;
+        }
+    }
+    xhr.send();
+});
+
+
+// name.addEventListener("onkeyup",()=>{
+//     console.log(name.value);
+// });
+
+</script>
 
 </body>
 
