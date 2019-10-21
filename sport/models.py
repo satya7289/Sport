@@ -20,3 +20,17 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+class Student(models.Model):
+    first_name    =models.CharField(max_length=30)
+    last_name     =models.CharField(max_length=30,null=True,blank=True)
+    roll_no       =models.CharField(max_length=10,unique=True)
+    email         =models.EmailField()
+    team          =models.ManyToManyField(Sport)
+
+    class Meta:
+        ordering = ('roll_no',)
+
+    def __str__(self):
+        return self.roll_no
+

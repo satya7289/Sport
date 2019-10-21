@@ -42,7 +42,8 @@ class ItemCreateView(View):
     template_name ='sport/CreateItem.html'
     def get(self, request, *args, **kwargs):
         id = kwargs['sport_pk']
-        return render(request,self.template_name,{'id':id})
+        sport = Sport.objects.get(id=id)
+        return render(request,self.template_name,{'id':id,'sport':sport})
     def post(self, request, *args, **kwargs):
         id     = kwargs['sport_pk']
         sport  = Sport.objects.get(id=id)
@@ -81,9 +82,23 @@ class StudentListView(View):
 class StudentCreateView(View):
     template_name ='student/CreateStudent.html'
     def get(self, request, *args, **kwargs):
-        pass
+        return render(request,self.template_name)
     def post(self, request, *args, **kwargs):
-        pass
+        if request.method=="POST":
+            first_name  =request.POST.get("first-name")
+            last_name   =request.POST.get("last-name")
+            roll_no     =request.POST.get("roll-no")
+            email       =request.POST.get("email")
+            team        =request.POST.get("sport-name")
+
+            # Get sport by team name
+            sport   =Sport.objects.get(name=team)
+            student   =Student(first_name=first_name,last_name=last_name,roll_no=roll_no,email=email)
+            student.save()
+            student.team.add(sport)
+            # print(first_name,last_name,roll_no,email,team,sport)
+            return redirect('students')
+
 
 class CheckoutView(View):
     template_name   ='checkout/Checkout.html'

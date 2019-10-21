@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+ <title>Students </title>
+ <link rel="stylesheet" href="{% static 'css/item.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#"><span>Students</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <form action="#" method="post" class="form-inline mx-auto search-form">
+            <input class="form-control mr-sm-2" type="search" placeholder="Name" aria-label="Search" required="">
+            <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="top-icons-agileits-w3layouts float-right">
+            <li class="nav-item">
+                <a href="{% url 'add_student' %}"><i class="fas fa-plus-circle"></i>Add</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+<div class="table-responsive mt-2">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>RollNO</th>
+            <th>Email</th>
+            <th>Sport</th>
+            <th>Update</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <!-- {% for item in items %} -->
+            <tr>
+                <td> name </td>
+                <td>dfgff</td>
+                <td>roll</td>
+                <td>email</td>
+                <td>sport</td>
+                <td>
+                    <a href="#" class="btn btn-info pull-left" style="margin-right: 3px;">Update</a>
+
+                </td>
+            </tr>
+        <!-- {% endfor %} -->
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}

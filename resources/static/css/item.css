@@ -1,0 +1,51 @@
+.nav--secondary{
+    background-color: brown;
+    margin-top: 100px;;
+    
+}
+
+.content-wrap{
+  
+   background-color: burlywood;
+}
+
+.back-to-top {
+    position: fixed;
+    display: none;
+    background: #0078ff;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    text-align: center;
+    line-height: 1;
+    font-size: 16px;
+    border-radius: 50%;
+    right: 15px;
+    bottom: 15px;
+    transition: background 0.5s;
+    z-index: 11;
+  }
+  
+  .back-to-top i {
+    padding-top: 12px;
+    color: #fff;
+  }
+  .top-icons-agileits-w3layouts span.badge {
+    font-size: 10px;
+    font-weight: bold;
+    color: #FFF;
+    background: #ff6c5f;
+    line-height: 13px;
+    width: 17px;
+    height: 17px;
+    border-radius: 2em;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    -o-border-radius: 2em;
+    text-align: center;
+    display: inline-block;
+    position: absolute;
+    top: -8%;
+    right: 3px;
+    padding: 2px 0 0;
+  }
