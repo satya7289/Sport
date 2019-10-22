@@ -14,7 +14,6 @@ from .models import Student
 class HomeView(View):
     template_name = 'layout.html'
     sport   = list(Sport.objects.values())
-    print("saaa")
     def get(self, request, *args, **kwargs):
         return render(request,self.template_name,{'sport':self.sport})
 
@@ -31,11 +30,10 @@ class SportCreateView(View):
                 messages.error(request,"Sport Name Already Exit.")
                 return redirect('home')
             sport = Sport(name=name,image=image)
-            # sport.save()
+            sport.save()
             if sport.id:
                 id = sport.id
             return redirect('list_item',id)
-            # return reverse_lazy('home')
 
 
 class ItemCreateView(View):
@@ -61,7 +59,7 @@ class ItemCreateView(View):
 
             print(name,brand,quantity,quality,description,sport)
             item    = Item(name=name,brand=brand,quality=quality,quantity=quantity,description=description,sport_type=sport)
-            # item.save()
+            item.save()
             return redirect('list_item',id)
 
 class ItemListView(View):
@@ -71,12 +69,16 @@ class ItemListView(View):
         id = kwargs['item_pk']
         sport = Sport.objects.get(id=id)
         items = list(Item.objects.filter(sport_type=sport).values())
-        return render(request,self.template_name,{'items':items,'id':id})
+        return render(request,self.template_name,{'items':items,'id':id,'sport':sport})
 
 class StudentListView(View):
     template_name   ='student/Students.html'
     def get(self, request, *args, **kwargs):
-        return render(request,self.template_name)
+        students = list(Student.objects.values())
+        for student in students:
+            sport = Student.objects.get(id=student['id']).team.first().name
+            student['sport']=sport
+        return render(request,self.template_name,{'students':students})
         
 
 class StudentCreateView(View):
@@ -91,12 +93,16 @@ class StudentCreateView(View):
             email       =request.POST.get("email")
             team        =request.POST.get("sport-name")
 
+            # print(first_name,last_name,roll_no,email,team)
             # Get sport by team name
             sport   =Sport.objects.get(name=team)
+            if Student.objects.filter(roll_no=roll_no):
+                messages.error(request,"Roll No Already Exits.")
+                return render(request,self.template_name)
             student   =Student(first_name=first_name,last_name=last_name,roll_no=roll_no,email=email)
             student.save()
-            student.team.add(sport)
-            # print(first_name,last_name,roll_no,email,team,sport)
+            sport.student_set.add(student)
+            print(first_name,last_name,roll_no,email,team,sport)
             return redirect('students')
 
 
