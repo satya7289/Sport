@@ -58,7 +58,7 @@ class ItemCreateView(View):
                 return render(request,self.template_name,{'id':id,'error':message})
 
             print(name,brand,quantity,quality,description,sport)
-            item    = Item(name=name,brand=brand,quality=quality,quantity=quantity,description=description,sport_type=sport)
+            item    = Item(name=name,brand=brand,quality=quality,available=quantity,quantity=quantity,description=description,sport_type=sport)
             item.save()
             return redirect('list_item',id)
 
