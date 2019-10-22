@@ -6,10 +6,8 @@
 
 {% block content %}
 
-<h4 class="tittle-w3-agileits mb-4"> Sport's Name</h4>
-
 <div class="outer-w3-agile mt-3">
-    <h4 class="tittle-w3-agileits mb-4"> Add Sports Items</h4>
+    <h4 class="tittle-w3-agileits mb-4"> Add {{ sport.name }} Items</h4>
     <form action="{% url 'add_item' sport_pk=id %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-row">

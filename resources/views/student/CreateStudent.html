@@ -1,0 +1,78 @@
+{% extends 'layout.html' %}
+
+{% block head %} 
+<title> New Student </title> 
+{% endblock %}
+
+{% block content %}
+
+<div class="outer-w3-agile mt-3">
+    <h4 class="tittle-w3-agileits mb-4"> Add New Student</h4>
+    <h6 class="text-danger">
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    </h6>
+    <form action="{% url 'add_student' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="first-name">First Name</label>
+                <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First Name" required>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="last-name">Last Name</label>
+                <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last Name">
+            </div>
+            <div class="form-group col-md-12">
+                    <label for="roll-no">Roll No</label>
+                    <input type="text" class="form-control" id="roll-no" name="roll-no" placeholder="B17CS048" required>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="sharma.20@iitj.ac.in" required>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="sport-name">Sport</label>
+                <select class="form-control" id="sport-name"  name="sport-name">
+                    <option selected="selected">None</option>
+                </select>
+            </div>
+        </div>
+       
+        <br>
+    
+       
+        <button type="submit" class="btn btn-primary" style="margin-inline-start: 50%;">Save</button>
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+
+    // Ajax call getting all sports name 
+    window.onload = ()=>{
+        var url ="{% url 'all_sport' %}";
+        var select = document.getElementById("sport-name");
+        var xhr = new XMLHttpRequest;
+        var content ="";
+        xhr.open('GET',url,true);
+        xhr.onload = function(){
+            if(this.status==200){
+                var response = JSON.parse(this.responseText);
+                for(var res in response){
+                    content += " <option>"+response[res]["name"]+"</option>";
+                }
+                select.innerHTML = content;
+            }
+        }
+        xhr.send();
+    };
+
+</script>
+{% endblock %}
