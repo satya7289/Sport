@@ -1,9 +1,11 @@
-var count=0;
+// for assigning each delete button to id , so it is easy to delete crossponding
+var count=0;       
+
 // For Adding Items
 function AddItem(){
     let tableBody      =document.getElementById("final-table-body");
     var content ="";
-    let del = '<td><button class="btn" onclick="DeleteItem(this)"><i class="fas fa-minus-circle"></i></button></td>';
+    let del = '<td><button class="btn" onclick="DeleteItem(this)" id="'+ count +'"><i class="fas fa-minus-circle"></i></button></td>';
    
     $(document).ready(function(){
         let sport   =$("#select-sport option:selected").text();
@@ -12,7 +14,6 @@ function AddItem(){
         let quality =$("#select-quality option:selected").text();
         let quantity=$("#select-quantity option:selected").text();
         // console.log(sport,item,brand,quality,quantity);
-        content += AddData(sport,item,brand,quality,quantity);
 
         if(sport==""||item==""||brand==""||quality==""||quantity==""){
             message="";
@@ -24,31 +25,51 @@ function AddItem(){
             alert(message);
             return;
         }
+
+
+        content += AddData(sport,item,brand,quality,quantity);
         content += del;
         tableBody.innerHTML += content;
-        console.log(count);
-        count +=1;
+        console.log("count variable: "+count);
         CleanData();
-        CheckoutButton(); 
+        CheckoutButton();
+        count +=1; 
     }); 
 }
 
-// Utility function for adding <td> Data </td>
+// Utility function for adding <td> Data </td> and adding Input data to form.
 function AddData(sport,item,brand,quality,quantity){
     let ans = "<td>"+sport+"</td>";
     ans += "<td>"+item+"</td>";
     ans += "<td>"+brand+"</td>";
     ans += "<td>"+quality+"</td>";
     ans += "<td>"+quantity+"</td>";
+
+    let formData='<div id="'+count+'">';
+    formData    +='<input type="hidden" name="sport-'+count+'" value="'+sport+'"></input>';
+    formData    +='<input type="hidden" name="item-'+count+'" value="'+item+'"></input>';
+    formData    +='<input type="hidden" name="brand-'+count+'" value="'+brand+'"></input>';
+    formData    +='<input type="hidden" name="quality-'+count+'" value="'+quality+'"></input>';
+    formData    +='<input type="hidden" name="quantity-'+count+'" value="'+quantity+'"></input>';
+    formData +='</div>';
+    // let formData='<div id="form-'+count+'">';
+    // formData    +='<input type="text" name="sport-'+count+'" value="'+sport+'"></input>';
+    // formData    +='<input type="text" name="item-'+count+'" value="'+item+'"></input>';
+    // formData    +='<input type="text" name="brand-'+count+'" value="'+brand+'"></input>';
+    // formData    +='<input type="text" name="quality-'+count+'" value="'+quality+'"></input>';
+    // formData    +='<input type="text" name="quantity-'+count+'" value="'+quantity+'"></input>';
+    // formData +='</div>';
+    $("#form-data").append(formData);
     return ans;
 }
 
 // For Deleting items
 function DeleteItem(e){
-    let tableBody =document.getElementById("final-table-body").rows.length;
-    if(tableBody>0){
-         e.parentNode.parentNode.remove(e.parentNode);
-    } 
+    $(document).ready(function(){
+        e.parentNode.parentNode.remove(e.parentNode);
+        let id =  $(e).attr("id")
+        $('#form-'+id).remove();  
+    });
     CheckoutButton(); 
  }
 
