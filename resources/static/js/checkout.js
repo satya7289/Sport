@@ -45,7 +45,7 @@ function AddData(sport,item,brand,quality,quantity){
     ans += "<td>"+quality+"</td>";
     ans += "<td>"+quantity+"</td>";
 
-    let formData='<div id="'+count+'">';
+    let formData='<div id="form-'+count+'">';
     formData    +='<input type="hidden" name="sport-'+count+'" value="'+sport+'"></input>';
     formData    +='<input type="hidden" name="item-'+count+'" value="'+item+'"></input>';
     formData    +='<input type="hidden" name="brand-'+count+'" value="'+brand+'"></input>';
@@ -59,7 +59,9 @@ function AddData(sport,item,brand,quality,quantity){
     // formData    +='<input type="text" name="quality-'+count+'" value="'+quality+'"></input>';
     // formData    +='<input type="text" name="quantity-'+count+'" value="'+quantity+'"></input>';
     // formData +='</div>';
+    console.log(formData);
     $("#form-data").append(formData);
+    
     return ans;
 }
 
@@ -94,5 +96,63 @@ function CleanData(){
         $('#select-brand').val(false);
         $('#select-quality').val(false);
         $('#select-quantity').val(false);
+    });
+}
+
+// For showing student roll no. for entry
+function ShowStudent(){
+    $(document).ready(()=>{
+        $("#checkout-home").hide();
+        $("#student-roll-no").fadeIn();
+       
+    });
+}
+
+// For showing Checkout Detail to entry
+function ShowCheckoutDetail(){
+    $(document).ready(()=>{
+       
+    // Add Name on the checkout page
+    let roll_no=$("#select-roll-no option:selected").text();
+    if(roll_no!=""){
+        $("#student-roll-no").hide();
+        $("#student-checkout-detail").fadeIn();
+        $("#checkout h4").html(roll_no);
+    }
+    else{
+        alert("Select Student Roll no");
+    }
+   
+    });
+}
+
+// Functionality of back button
+function back(){
+    $(document).ready(()=>{
+        // alert("aa");
+       if($("#student-roll-no").is(":hidden") && $("#checkout-home").is(":hidden") && !$("#student-checkout-detail").is(":hidden")){
+           $("#student-checkout-detail").hide();
+           $("#checkout-home").hide();
+           $("#student-roll-no").fadeIn();
+           console.log("in");
+       }  
+       else if($("#student-checkout-detail").is(":hidden") && $("#checkout-home").is(":hidden") && !$("#student-roll-no").is(":hidden")){
+            $("#student-checkout-detail").hide();
+            $("#student-roll-no").hide();
+            $("#checkout-home").fadeIn();
+            console.log("out");
+       }
+
+    });
+}
+
+// Refresh all data for checkout
+function Refresh(){
+    $(document).ready(()=>{
+        count =0;
+        $("#form-data").html("");
+        $("#final-table-body").html("");
+        console.log("cound:"+count);
+
     });
 }
