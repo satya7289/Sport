@@ -25,7 +25,8 @@ urlpatterns = [
     path('checkout/',CheckoutView.as_view(),name='checkout'),
 
 
-    path('api/allsport/',api_view.GetAllSport,name='all_sport'),
-    path('api/sport',api_view.GetSport,name='sport'),
+    path('ajax/allsport/',api_view.GetAllSport,name='all_sport'),
+    path('ajax/sport',api_view.GetSport,name='sport'),
+    path('ajax/search',api_view.Search,name='api_search'),
 
 ]

@@ -37,3 +37,44 @@ def GetAllItem(request, *args, **kwargs):
         # data = list(Item.objects.filter(sport_type=sport).values())
         data = list(Sport.objects.values())
         return JsonResponse(data)
+
+def Search(request, *arg, **kwargs):
+    if request.method=="GET":
+        item   =request.GET.get("item")
+        brand  =request.GET.get("brand")
+        quality=request.GET.get("quality")
+        quantity=request.GET.get("quantity")
+        sport  =request.GET.get("sport")
+
+        id = Sport.objects.filter(name=sport).first()
+        status =0
+        message="Not Found"
+        query =[]
+        if sport and item and brand and quality:
+            quantity = list(Item.objects.filter(name=item,brand=brand,quality=quality,sport_type=id).values())
+            query = {i:quantity[i] for i in range(0,len(quantity))}
+            status=1
+            message="success"
+        elif sport and item and brand:
+            quality = list(Item.objects.filter(name=item,brand=brand,sport_type=id).values())
+            query = {i:quality[i] for i in range(0,len(quality))}
+            status=1
+            message="success"
+        elif sport and item:
+            brands = list(Item.objects.filter(name=item,sport_type=id).values())
+            query = {i:brands[i] for i in range(0,len(brands))}
+            status=1
+            message="success"
+        elif sport:
+            items =list(Sport.objects.filter(name=sport).first().item_set.values())
+            query = { i : items[i] for i in range(0, len(items)) }
+            status=1
+            message="Success"
+        # print(brand,quality,quantity,sport)
+        # print(query)
+        data ={
+            'status':status,
+            'message':message,
+            'query':query,
+        }
+        return JsonResponse(data)

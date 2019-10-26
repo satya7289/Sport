@@ -61,7 +61,6 @@ function AddData(sport,item,brand,quality,quantity){
     // formData +='</div>';
     console.log(formData);
     $("#form-data").append(formData);
-    
     return ans;
 }
 
@@ -118,6 +117,7 @@ function ShowCheckoutDetail(){
         $("#student-roll-no").hide();
         $("#student-checkout-detail").fadeIn();
         $("#checkout h4").html(roll_no);
+        $("#form-student-roll-no").attr("value",roll_no);
     }
     else{
         alert("Select Student Roll no");

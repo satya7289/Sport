@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-around mb-3">
+<div class="d-flex justify-content-around">
     <button class="btn btn-light" onclick="back()"><i class="fas fa-chevron-circle-left fa-3x"></i></button>
     <h4 class="tittle-w3-agileits"> Checkout </h4>
 </div>
@@ -38,6 +38,7 @@
         <button class="btn btn-primary mt-3" style="margin-inline-start: 45%;" onclick="ShowCheckoutDetail()" id="procced">Procced</button>
 </div>
 
+
 <div class="" id="student-checkout-detail">
     <div class="table-responsive mt-2">
 
@@ -62,30 +63,19 @@
                             </select>
                         </td>
                         <td>
-                                <select class="form-control" id="select-item">
-                                    {% for item in items %}
-                                        <option>{{ item.name }}</option>
-                                    {% endfor %}    
+                                <select class="form-control" id="select-item">   
                                 </select>
                             </td>
                         <td>
                             <select class="form-control" id="select-brand">
-                                    <option>Damaged</option>
                             </select>
                         </td>
                         <td>
                             <select class="form-control" id="select-quality">
-                                    <option>Used</option>
                             </select>
                         </td>
                         <td>
                             <select class="form-control" id="select-quantity">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                    <option>6</option>
                             </select>
                         </td>   
                 </tr> 
@@ -115,8 +105,9 @@
             </tbody> 
         </table>
 
-        <form action="#" method="post" enctype="multipart/form-data">
+        <form action="{% url 'checkout' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <input id="form-student-roll-no" type="hidden" name="student-roll-no" value="">
             <div id="form-data">
             </div>
             <button type="submit" class="btn btn-primary" style="margin-inline-start: 45%;" disabled=true id="form-checkout">Checkout</button>
@@ -129,10 +120,156 @@
 {% block script %}
 <script src="{% static 'js/checkout.js' %}"></script>
 <script>
-
 $(document).ready(function(){
     $("#student-roll-no").hide();
     $("#student-checkout-detail").hide();
+    $("#select-sport").val(false);
 });
+</script>
+<script>
+    $(document).ready(()=>{
+        let sport =$("#select-sport option:selected").text();
+        let item  =$("#select-item option:selected").text();
+        let brand =$("#select-brand option:selected").text();
+        let quality=$("#select-quality option:selected").text();
+        let quantity=$("#select-quantity option:selected").text();
+
+        $("#select-sport").change(()=>{
+            sport = $("#select-sport option:selected").text();
+            console.log(sport);
+            $.ajax({
+                type: 'GET',
+                url : '{% url "api_search" %}',
+                data: {
+                    sport:sport,
+                },
+                dataType: 'json',
+                success:function(data){
+                    let content="";
+                    if(data["status"]==1){
+                        for(var i in data.query){
+                            content +="<option>";
+                            content += data["query"][i]["name"];
+                            content +="</option>";
+                            console.log(data["query"][i]["name"])
+                        }
+                    }
+                    $("#select-item").html(content);
+                    $("#select-brand").html("<option>"+data["query"][0]["brand"]+"</option>");
+                    $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
+                    let quantity = data["query"][0]["available"];
+                    Qcontent=""
+                    for(let i=0;i<quantity;i++){
+                        Qcontent += "<option>"+i+"</option>";
+                    }
+                    $("#select-quantity").html(Qcontent);
+                }
+            });
+        });
+
+        $("#select-item").change(()=>{
+            item = $("#select-item option:selected").text();
+            console.log(sport);
+            $.ajax({
+                type: 'GET',
+                url : '{% url "api_search" %}',
+                data: {
+                    sport:sport,
+                    item:item
+                },
+                dataType: 'json',
+                success:function(data){
+                    let content="";
+                    if(data["status"]==1){
+                        for(var i in data.query){
+                            content +="<option>";
+                            content += data["query"][i]["brand"];
+                            content +="</option>";
+                            console.log(data["query"][i]["brand"])
+                        }
+                    }
+                    $("#select-brand").html(content);
+                    $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
+                    let quantity = data["query"][0]["available"];
+                    Qcontent=""
+                    for(let i=0;i<quantity;i++){
+                        Qcontent += "<option>"+i+"</option>";
+                    }
+                    $("#select-quantity").html(Qcontent);
+                }
+            });
+        });
+
+        $("#select-brand").change(()=>{
+            brand = $("#select-brand option:selected").text();
+            console.log(brand);
+            $.ajax({
+                type: 'GET',
+                url : '{% url "api_search" %}',
+                data: {
+                    sport:sport,
+                    item:item,
+                    brand:brand,
+                },
+                dataType: 'json',
+                success:function(data){
+                    let content="";
+                    if(data["status"]==1){
+                        for(var i in data.query){
+                            content +="<option>";
+                            content += data["query"][i]["name"];
+                            content +="</option>";
+                            console.log(data["query"][i]["name"])
+                        }
+                    }
+                    $("#select-quality").html(content);
+                    let quantity = data["query"][0]["available"];
+                    Qcontent=""
+                    for(let i=0;i<quantity;i++){
+                        Qcontent += "<option>"+i+"</option>";
+                    }
+                    $("#select-quantity").html(Qcontent);
+                    // $("select-quantity").html("Fvf");
+                }
+            });
+        });
+
+        $("#select-quality").change(()=>{
+            quality = $("#select-quality option:selected").text();
+            console.log(quality);
+            $.ajax({
+                type: 'GET',
+                url : '{% url "api_search" %}',
+                data: {
+                    sport:sport,
+                    item:item,
+                    brand:brand,
+                    quality:quantity,
+                },
+                dataType: 'json',
+                success:function(data){
+                    let content="";
+                    if(data["status"]==1){
+                        for(var i in data.query){
+                            content +="<option>";
+                            content += data["query"][i]["name"];
+                            content +="</option>";
+                            console.log(data["query"][i]["name"])
+                        }
+                    }
+                    $("#select-quantity").html(content);
+                    let quantity = data["query"][0]["available"];
+                    Qcontent=""
+                    for(let i=0;i<quantity;i++){
+                        Qcontent += "<option>"+i+"</option>";
+                    }
+                    $("#select-quantity").html(Qcontent);
+                }
+            });
+        });
+
+        // console.log(sport,item,brand,quality,quantity);
+    });
+
 </script>
 {% endblock %}
