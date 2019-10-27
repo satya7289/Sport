@@ -114,18 +114,35 @@ class StudentCreateView(View):
             return render(request,self.template_name)
 
 
+class CheckoutDetailView(View):
+    template_name   ='checkout/CheckoutDetail.html'
+    def get(self, request, *args, **kwargs):
+        checkouts=list(Checkout.objects.values())
+        s_no=1
+        for checkout in checkouts:
+            checkout['s_no']=s_no
+            temp_checkout=Checkout.objects.get(id=1)
+            checkout['roll_no']=temp_checkout.student_name.roll_no
+            try:
+                checkout['date_of_submit']=temp_checkout.checkin.date_of_submit
+            except:
+                pass
+            # print(temp_checkout.checkin)
+
+        return render(request,self.template_name,{
+            'checkouts':checkouts,
+            })
+
 class CheckoutView(View):
     template_name   ='checkout/Checkout.html'
     def get(self, request, *args, **kwargs):
         sports   =list(Sport.objects.values())
         items    =list(Item.objects.values())
         students =list(Student.objects.values())
-        checkouts=list(Checkout.objects.values())
         return render(request,self.template_name,{
             'sports':sports,
             'items':items, 
             'students':students,
-            'checkouts':checkouts,
             })
 
     def post(self, request, *args, **kwargs):
@@ -155,6 +172,11 @@ class CheckoutView(View):
                 sport =Sport.objects.filter(name=sport_name).first()
                 item  =Item.objects.filter(name=item_name,brand=brand,quality=quality,sport_type=sport).first()
                 item.available -=int(quantity)
+                
+                if item.available < 0:
+                    messages.error(request,"Dublicate Data is entered ")
+                    return redirect('checkout')
+
                 item.save()
                 # print(item.available,"xdcfvgbhnjmk,")
 
@@ -236,7 +258,4 @@ class CheckinView(View):
             else:
                 messages.error(request,"Already checkin")
                 return redirect('checkout')
-    
-    def post(self, request, *args, **kwargs):
-        pass
 

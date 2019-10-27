@@ -103,6 +103,17 @@ function CleanData(){
     });
 }
 
+
+// For showing All Checkout to entry
+// function ViewAll(){
+//     alert("sdf");
+//     $(document).ready(()=>{
+//         $("#checkout-home").hide();
+//         $("#all-checkout").fadeIn();
+       
+//     });
+// }
+
 // For showing student roll no. for entry
 function ShowStudent(){
     $(document).ready(()=>{

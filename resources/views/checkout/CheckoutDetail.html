@@ -24,11 +24,11 @@
         <tbody> 
             {% for checkout in checkouts %}   
             <tr>
-                <td>{{ checkout.id }}</td>
-                <td>{{ checkout.student_name_id }}</td>
+                <td>{{ checkout.s_no }}</td>
+                <td>{{ checkout.roll_no }}</td>
                 <td>{{ checkout.date_of_issue }}</td>
                 <td>{{ checkout.checkin_status }}</td>
-                <td>date</td>
+                <td>{{ checkout.date_of_submit }}</td>
                 <td>
                     <button type="button" data-id="{{ checkout.id }}" class="btn btn-info">Detail</button>
                 </td>
