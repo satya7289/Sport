@@ -36,24 +36,26 @@ class Student(models.Model):
         return self.roll_no
 
 class ListOfItem(models.Model):
-    items           =models.ManyToManyField(Item)
-    item_qunatity   =models.PositiveIntegerField()
+    item           =models.ForeignKey(Item,on_delete=models.CASCADE)
+    item_quantity   =models.PositiveIntegerField()
+    date            =models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.item_name
+        return '%s %s %s %s' %(self.item.sport_type.name,self.item.name,"/-",self.date)
 
 class Checkout(models.Model):
-    student_name      =models.ManyToManyField(Student)
-    item_list    =models.ForeignKey(ListOfItem,on_delete=models.CASCADE)
+    student_name =models.ForeignKey(Student,on_delete=models.CASCADE)
+    item_list    =models.ManyToManyField(ListOfItem)
     date_of_issue=models.DateField(auto_now=True)
+    checkin_status=models.BooleanField(default=False)
 
     def __str__(self):
-        return self.student_name
+        return '%s %s' % (self.date_of_issue, self.student_name.first_name)
 
 class Checkin(models.Model):
     checkout_item =models.OneToOneField(Checkout,on_delete=models.CASCADE)
     date_of_submit=models.DateField(auto_now=True)
 
     def __str__(self):
-        return self.checkout_item
+        return '%s %s %s' %(self.date_of_submit,"/-",self.checkout_item)
 

@@ -7,11 +7,14 @@ from .views import HomeView
 from .views import ItemListView
 from .views import StudentListView
 from .views import CheckoutView
+from .views import CheckinView
 from .views import StudentCreateView
 
 from . import api_view
 
 urlpatterns = [
+    #path('',TemplateView.as_view(template_name='home.html'))
+
     path('',HomeView.as_view(),name='home'),
     path('item/',TemplateView.as_view(template_name="sport/CreateItem.html")),
     path('additem/<int:sport_pk>/',ItemCreateView.as_view(),name='add_item'),
@@ -23,6 +26,7 @@ urlpatterns = [
 
 
     path('checkout/',CheckoutView.as_view(),name='checkout'),
+    path('checkin/<int:checkout_pk>/',CheckinView.as_view(),name='checkin'),
 
 
     path('ajax/allsport/',api_view.GetAllSport,name='all_sport'),
