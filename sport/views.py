@@ -173,7 +173,7 @@ class CheckoutView(View):
                 # print(item.available,new_item)
 
             print(roll_no,list_of_items)
-            html_message=render_to_string('mail.html',{
+            html_message=render_to_string('mail/CheckoutMail.html',{
                 'date':checkout.date_of_issue,
                 'roll_no':roll_no,
                 'items_detail':list_of_items,
@@ -195,6 +195,7 @@ class CheckinView(View):
         if request.method=="GET":
             checkout_id=kwargs["checkout_pk"]
 
+            list_of_items=[]
             checkout =Checkout.objects.get(id=checkout_id)
             if not checkout.checkin_status:
                 checkout.checkin_status=True
@@ -205,9 +206,32 @@ class CheckinView(View):
                     item.available +=i['item_quantity']
                     item.save()
                     print(item.available)
-                
+                    
+                    list_of_items.append([
+                        item.sport_type.name,
+                        item.name,
+                        item.brand,
+                        item.quality,
+                        i['item_quantity'],
+                    ])
                 checkin =Checkin(checkout_item=checkout)
                 checkin.save()
+
+                html_message=render_to_string('mail/CheckoutMail.html',{
+                    'date':checkin.date_of_submit,
+                    'roll_no':checkin.checkout_item.student_name.roll_no,
+                    'items_detail':list_of_items,
+                })
+                # print(html_message)
+
+                # send_mail(
+                #     'Checkout Detail',
+                #     '',
+                #     'kaporkhanasharma@gmail.com',
+                #     ['kaporkhanasharma@gmail.com'],
+                #     fail_silently=False,
+                #     html_message=html_message,
+                # )
                 return redirect('checkout')
             else:
                 messages.error(request,"Already checkin")
