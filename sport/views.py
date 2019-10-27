@@ -10,6 +10,9 @@ from django.contrib import messages
 from .models import Sport
 from .models import Item
 from .models import Student
+from .models import ListOfItem
+from .models import Checkin
+from .models import Checkout
 
 class HomeView(View):
     template_name = 'layout.html'
@@ -95,18 +98,96 @@ class StudentCreateView(View):
 
             # print(first_name,last_name,roll_no,email,team)
             # Get sport by team name
-            sport   =Sport.objects.get(name=team)
-            if Student.objects.filter(roll_no=roll_no):
-                messages.error(request,"Roll No Already Exits.")
-                return render(request,self.template_name)
-            student   =Student(first_name=first_name,last_name=last_name,roll_no=roll_no,email=email)
-            student.save()
-            sport.student_set.add(student)
-            print(first_name,last_name,roll_no,email,team,sport)
-            return redirect('students')
+            if team:
+                sport   =Sport.objects.filter(name=team).first()
+                if Student.objects.filter(roll_no=roll_no):
+                    messages.error(request,"Roll No Already Exits.")
+                    return render(request,self.template_name)
+                student   =Student(first_name=first_name,last_name=last_name,roll_no=roll_no,email=email)
+                student.save()
+                sport.student_set.add(student)
+                print(first_name,last_name,roll_no,email,team,sport)
+                return redirect('students')
+            messages.error(request,"Enter Sport Name")
+            return render(request,self.template_name)
 
 
 class CheckoutView(View):
     template_name   ='checkout/Checkout.html'
     def get(self, request, *args, **kwargs):
-        return render(request,self.template_name)
+        sports   =list(Sport.objects.values())
+        items    =list(Item.objects.values())
+        students =list(Student.objects.values())
+        checkouts=list(Checkout.objects.values())
+        return render(request,self.template_name,{
+            'sports':sports,
+            'items':items, 
+            'students':students,
+            'checkouts':checkouts,
+            })
+
+    def post(self, request, *args, **kwargs):
+        if request.method=="POST":
+            roll_no    =request.POST.get("student-roll-no")
+            list_of_item_input = []
+            number_of_items =[]
+            list_of_items =[]
+
+            student =Student.objects.filter(roll_no=roll_no).first()
+            checkout=Checkout(student_name=student)
+            checkout.save()
+
+            for key in request.POST:
+                list_of_item_input.append(key)
+            del list_of_item_input[0:2]
+            
+            for i in range(int(len(list_of_item_input)/5)):
+                number_of_items.append(list_of_item_input[i*5:i*5+5])
+            for i in number_of_items:
+                sport_name=request.POST.get(i[0])
+                item_name =request.POST.get(i[1])
+                brand   =request.POST.get(i[2])
+                quality =request.POST.get(i[3])
+                quantity=request.POST.get(i[4])
+
+                sport =Sport.objects.filter(name=sport_name).first()
+                item  =Item.objects.filter(name=item_name,brand=brand,quality=quality,sport_type=sport).first()
+                item.available -=int(quantity)
+                item.save()
+                # print(item.available,"xdcfvgbhnjmk,")
+
+                new_item =ListOfItem(item=item,item_quantity=quantity)
+                new_item.save()
+                checkout.item_list.add(new_item)
+
+                # print(item.available,new_item)
+
+            # print(roll_no,list_of_item_input)
+            return redirect('checkout')
+
+class CheckinView(View):
+    def get(self, request, *args, **kwargs):
+        if request.method=="GET":
+            checkout_id=kwargs["checkout_pk"]
+
+            checkout =Checkout.objects.get(id=checkout_id)
+            if not checkout.checkin_status:
+                checkout.checkin_status=True
+                checkout.save()
+                item_list=list(checkout.item_list.values())
+                for i in item_list:
+                    item            =Item.objects.get(id=i['item_id'])
+                    item.available +=i['item_quantity']
+                    item.save()
+                    print(item.available)
+                
+                checkin =Checkin(checkout_item=checkout)
+                checkin.save()
+                return redirect('checkout')
+            else:
+                messages.error(request,"Already checkin")
+                return redirect('checkout')
+    
+    def post(self, request, *args, **kwargs):
+        pass
+
