@@ -1,7 +1,11 @@
-from django.http import JsonResponse
 import json
+from django.http import JsonResponse
+
 from .models import Sport
 from .models import Item
+from .models import ListOfItem
+from .models import Checkin
+from .models import Checkout
 
 def GetAllSport(request):
     if request.method=="GET":
@@ -76,5 +80,42 @@ def Search(request, *arg, **kwargs):
             'status':status,
             'message':message,
             'query':query,
+        }
+        return JsonResponse(data)
+
+def CheckoutDetail(request):
+    if request.method=="GET":
+        id = request.GET.get("id")
+        status =0
+        message="Not Found"
+        query =[]
+        if id:
+            checkout = Checkout.objects.filter(id=id).first()
+            if checkout:
+                total_items=checkout.item_list.count()
+                items = list(checkout.item_list.values())
+                items ={ i : items[i] for i in range(0, len(items)) }
+                first_name=checkout.student_name.first_name
+                last_name=checkout.student_name.last_name
+                roll_no=checkout.student_name.roll_no
+                email  =checkout.student_name.email
+                sport =checkout.student_name.team.first().name
+                query={
+                    'total_items':total_items,
+                    'items':items,
+                    'first_name':first_name,
+                    'last_name':last_name,
+                    'roll_no':roll_no,
+                    'email':email,
+                    'sport':sport,
+                }
+                
+                # print(checkout,items,first_name,last_name,email,sport,roll_no)
+                status=1
+                message="success"
+        data ={
+            'status':status,
+            'message':message,
+            'query':query
         }
         return JsonResponse(data)
