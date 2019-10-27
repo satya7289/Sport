@@ -64,6 +64,11 @@ function AddData(sport,item,brand,quality,quantity){
     return ans;
 }
 
+// Utility function for checking Dublicate Data
+function Dublicate(tableBody,sport,item,brand,quality){
+return
+}
+
 // For Deleting items
 function DeleteItem(e){
     $(document).ready(function(){

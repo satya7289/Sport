@@ -116,6 +116,31 @@
     </div>
 </div>
 
+
+<div class="fluid-container">
+    <h4 class="tittle-w3-agileits mb-4">All checkout </h4>
+    <table class="table table-bordered table-striped" id="final-table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Student Id</th>
+            <th>Date</th>
+            <th>checkin status</th>
+        </tr>
+        </thead>
+        <tbody> 
+            {% for checkout in checkouts %}   
+            <tr>
+                <td>{{ checkout.id }}</td>
+                <td>{{ checkout.student_name_id }}</td>
+                <td>{{ checkout.date_of_issue }}</td>
+                <td>{{ checkout.checkin_status }}</td>
+            </tr>  
+            {% endfor %}
+        </tbody> 
+    </table>
+</div>
+
 {% endblock %}
 {% block script %}
 <script src="{% static 'js/checkout.js' %}"></script>
@@ -157,9 +182,9 @@ $(document).ready(function(){
                     $("#select-item").html(content);
                     $("#select-brand").html("<option>"+data["query"][0]["brand"]+"</option>");
                     $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
-                    let quantity = data["query"][0]["available"];
+                    let available = data["query"][0]["available"];
                     Qcontent=""
-                    for(let i=0;i<quantity;i++){
+                    for(let i=1;i<=available;i++){
                         Qcontent += "<option>"+i+"</option>";
                     }
                     $("#select-quantity").html(Qcontent);
@@ -190,9 +215,9 @@ $(document).ready(function(){
                     }
                     $("#select-brand").html(content);
                     $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
-                    let quantity = data["query"][0]["available"];
+                    let available = data["query"][0]["available"];
                     Qcontent=""
-                    for(let i=0;i<quantity;i++){
+                    for(let i=1;i<=available;i++){
                         Qcontent += "<option>"+i+"</option>";
                     }
                     $("#select-quantity").html(Qcontent);
@@ -223,9 +248,9 @@ $(document).ready(function(){
                         }
                     }
                     $("#select-quality").html(content);
-                    let quantity = data["query"][0]["available"];
+                    let available = data["query"][0]["available"];
                     Qcontent=""
-                    for(let i=0;i<quantity;i++){
+                    for(let i=1;i<=available;i++){
                         Qcontent += "<option>"+i+"</option>";
                     }
                     $("#select-quantity").html(Qcontent);
@@ -258,9 +283,9 @@ $(document).ready(function(){
                         }
                     }
                     $("#select-quantity").html(content);
-                    let quantity = data["query"][0]["available"];
+                    let available = data["query"][0]["available"];
                     Qcontent=""
-                    for(let i=0;i<quantity;i++){
+                    for(let i=1;i<=available;i++){
                         Qcontent += "<option>"+i+"</option>";
                     }
                     $("#select-quantity").html(Qcontent);
