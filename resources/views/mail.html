@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Mail</title>
+</head>
+<body>
+    <p><b>Student Roll NO: </b>{{ roll_no }}</p>
+    <p><b>Date of Issue: </b>{{ date }}</p>
+    <b>Details of Equipment:-</b>
+    <hr>
+    
+    <table>
+        <thead>
+        <tr>
+            <th>Sport</th>
+            <th>Eqipment</th>
+            <th>Brand</th>
+            <th>Quality</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+        <tbody> 
+           
+            {% for item in items_detail %}   
+            <tr>
+                <td>{{ item.0 }}</td>
+                <td>{{ item.1 }}</td>
+                <td>{{ item.2 }}</td>
+                <td>{{ item.3 }}</td>
+                <td>{{ item.4 }}</td>
+            </tr>  
+            {% endfor %}
+        </tbody> 
+    </table>
+    <hr>
+    Regards<br>
+    Satya Prakash
+
+</body>
+</html>

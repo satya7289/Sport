@@ -126,6 +126,7 @@ EMAIL_PORT = config('EMAIL_PORT', cast=int)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL',cast=bool)
 DEFAULT_FROM_EMAIL = 'Developer Team <noreply@satya>'
 EMAIL_SUBJECT_PREFIX = '[Sport Management] '
 SERVER_EMAIL = ''

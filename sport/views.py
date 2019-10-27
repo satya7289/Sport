@@ -6,6 +6,8 @@ from django.views.generic import UpdateView
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from .models import Sport
 from .models import Item
@@ -160,9 +162,32 @@ class CheckoutView(View):
                 new_item.save()
                 checkout.item_list.add(new_item)
 
+                list_of_items.append([
+                    sport_name,
+                    item_name,
+                    brand,
+                    quality,
+                    quantity,
+                ])
+
                 # print(item.available,new_item)
 
-            # print(roll_no,list_of_item_input)
+            print(roll_no,list_of_items)
+            html_message=render_to_string('mail.html',{
+                'date':checkout.date_of_issue,
+                'roll_no':roll_no,
+                'items_detail':list_of_items,
+            })
+            
+            # send_mail(
+            #     'Checkout Detail',
+            #     '',
+            #     'kaporkhanasharma@gmail.com',
+            #     ['kaporkhanasharma@gmail.com'],
+            #     fail_silently=False,
+            #     html_message=html_message,
+            # )
+            
             return redirect('checkout')
 
 class CheckinView(View):
