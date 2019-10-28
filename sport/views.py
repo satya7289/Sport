@@ -118,9 +118,8 @@ class CheckoutDetailView(View):
     template_name   ='checkout/CheckoutDetail.html'
     def get(self, request, *args, **kwargs):
         checkouts=list(Checkout.objects.values())
-        s_no=1
+
         for checkout in checkouts:
-            checkout['s_no']=s_no
             temp_checkout=Checkout.objects.get(id=1)
             checkout['roll_no']=temp_checkout.student_name.roll_no
             try:

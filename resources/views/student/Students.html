@@ -32,6 +32,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>S.no</th>
             <th>FirstName</th>
             <th>LastName</th>
             <th>RollNO</th>
@@ -44,7 +45,7 @@
         <tbody>
         {% for student in students %}
             <tr>
-                
+                <td>{{ forloop.counter }}</td>
                 <td>{{ student.first_name }}</td>
                 <td>{{ student.last_name }}</td>
                 <td>{{ student.roll_no }}</td>

@@ -32,6 +32,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>S.no</th>
             <th>Name</th>
             <th>Description</th>
             <th>Brand</th>
@@ -45,6 +46,7 @@
         <tbody>
         {% for item in items %}
             <tr>
+                <td>{{ forloop.counter }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.description }}</td>
                 <td>{{ item.brand }}</td>
