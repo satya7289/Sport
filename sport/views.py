@@ -120,10 +120,11 @@ class CheckoutDetailView(View):
         checkouts=list(Checkout.objects.values())
 
         for checkout in checkouts:
-            temp_checkout=Checkout.objects.get(id=1)
+            temp_checkout=Checkout.objects.get(id=checkout['id'])
             checkout['roll_no']=temp_checkout.student_name.roll_no
             try:
                 checkout['date_of_submit']=temp_checkout.checkin.date_of_submit
+                print(checkout['date_of_submit'],temp_checkout.checkin)
             except:
                 pass
             # print(temp_checkout.checkin)
@@ -219,8 +220,6 @@ class CheckinView(View):
             list_of_items=[]
             checkout =Checkout.objects.get(id=checkout_id)
             if not checkout.checkin_status:
-                checkout.checkin_status=True
-                checkout.save()
                 item_list=list(checkout.item_list.values())
                 for i in item_list:
                     item            =Item.objects.get(id=i['item_id'])
@@ -235,6 +234,7 @@ class CheckinView(View):
                         item.quality,
                         i['item_quantity'],
                     ])
+                    
                 checkin =Checkin(checkout_item=checkout)
                 checkin.save()
 
@@ -244,7 +244,7 @@ class CheckinView(View):
                     'items_detail':list_of_items,
                 })
                 # print(html_message)
-
+                print(checkin.date_of_submit)
                 # send_mail(
                 #     'Checkout Detail',
                 #     '',
@@ -253,6 +253,9 @@ class CheckinView(View):
                 #     fail_silently=False,
                 #     html_message=html_message,
                 # )
+                
+                checkout.checkin_status=True
+                checkout.save()
                 return redirect('checkout')
             else:
                 messages.error(request,"Already checkin")

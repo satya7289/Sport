@@ -33,6 +33,6 @@ urlpatterns = [
     path('ajax/allsport/',api_view.GetAllSport,name='all_sport'),
     path('ajax/sport',api_view.GetSport,name='sport'),
     path('ajax/search',api_view.Search,name='api_search'),
-    path('ajax/checkout',api_view.CheckoutDetail,name='ajax-checkout')
+    path('ajax/checkout',api_view.CheckoutDetail,name='ajax-checkout-detail')
 
 ]
