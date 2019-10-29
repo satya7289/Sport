@@ -1,4 +1,3 @@
-<!--[![Website myfakewebsitethatshouldnotexist.at.least.i.hope](https://img.shields.io/website-up-down-green-red/http/myfakewebsitethatshouldnotexist.at.least.i.hope.svg)](http://myfakewebsitethatshouldnotexist.at.least.i.hope/)-->
 [![Website shields.io](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](#)
 [![Generic badge](https://img.shields.io/badge/Django-2.1.7-<COLOR>.svg)](https://www.djangoproject.com)
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
