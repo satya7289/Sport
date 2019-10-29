@@ -8,15 +8,15 @@
 {% block content %}
 
 <div class="d-flex justify-content-around">
-    <button class="btn btn-light" onclick="back()"><i class="fas fa-chevron-circle-left fa-3x"></i></button>
-    <h4 class="tittle-w3-agileits"> Checkout </h4>
+    <button class="btn btn-light" onclick="back()"><i class="fas fa-chevron-circle-left fa-2x"></i></button>
+    <h4 class="tittle-w3-agileits"> <b>Checkout</b> </h4>
 </div>
 <hr>
 
 
 <div class="" id="checkout-home">
     <div class="d-flex justify-content-around mb-4 mt-5">
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column" onclick="location.href='{% url 'checkout-detail' %}'">
                 <img src="{% static 'images/circle2.png' %}"  height="200" width="200" alt="view-all">
         </div>
         <div class="d-flex flex-column" onclick="ShowStudent()">
@@ -114,31 +114,6 @@
         </form>
 
     </div>
-</div>
-
-
-<div class="fluid-container">
-    <h4 class="tittle-w3-agileits mb-4">All checkout </h4>
-    <table class="table table-bordered table-striped" id="final-table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Student Id</th>
-            <th>Date</th>
-            <th>checkin status</th>
-        </tr>
-        </thead>
-        <tbody> 
-            {% for checkout in checkouts %}   
-            <tr>
-                <td>{{ checkout.id }}</td>
-                <td>{{ checkout.student_name_id }}</td>
-                <td>{{ checkout.date_of_issue }}</td>
-                <td>{{ checkout.checkin_status }}</td>
-            </tr>  
-            {% endfor %}
-        </tbody> 
-    </table>
 </div>
 
 {% endblock %}

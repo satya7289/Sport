@@ -9,6 +9,7 @@ from .views import StudentListView
 from .views import CheckoutView
 from .views import CheckinView
 from .views import StudentCreateView
+from .views import CheckoutDetailView
 
 from . import api_view
 
@@ -24,7 +25,7 @@ urlpatterns = [
     path('students/',StudentListView.as_view(),name='students'),
     path('addstudent/',StudentCreateView.as_view(),name='add_student'),
 
-
+    path('checkout/detail',CheckoutDetailView.as_view(),name='checkout-detail'),
     path('checkout/',CheckoutView.as_view(),name='checkout'),
     path('checkin/<int:checkout_pk>/',CheckinView.as_view(),name='checkin'),
 
@@ -32,5 +33,6 @@ urlpatterns = [
     path('ajax/allsport/',api_view.GetAllSport,name='all_sport'),
     path('ajax/sport',api_view.GetSport,name='sport'),
     path('ajax/search',api_view.Search,name='api_search'),
+    path('ajax/checkout',api_view.CheckoutDetail,name='ajax-checkout-detail')
 
 ]

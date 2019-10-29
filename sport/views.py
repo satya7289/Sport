@@ -6,6 +6,8 @@ from django.views.generic import UpdateView
 from django.views.generic import View
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from .models import Sport
 from .models import Item
@@ -112,18 +114,35 @@ class StudentCreateView(View):
             return render(request,self.template_name)
 
 
+class CheckoutDetailView(View):
+    template_name   ='checkout/CheckoutDetail.html'
+    def get(self, request, *args, **kwargs):
+        checkouts=list(Checkout.objects.values())
+
+        for checkout in checkouts:
+            temp_checkout=Checkout.objects.get(id=checkout['id'])
+            checkout['roll_no']=temp_checkout.student_name.roll_no
+            try:
+                checkout['date_of_submit']=temp_checkout.checkin.date_of_submit
+                print(checkout['date_of_submit'],temp_checkout.checkin)
+            except:
+                pass
+            # print(temp_checkout.checkin)
+
+        return render(request,self.template_name,{
+            'checkouts':checkouts,
+            })
+
 class CheckoutView(View):
     template_name   ='checkout/Checkout.html'
     def get(self, request, *args, **kwargs):
         sports   =list(Sport.objects.values())
         items    =list(Item.objects.values())
         students =list(Student.objects.values())
-        checkouts=list(Checkout.objects.values())
         return render(request,self.template_name,{
             'sports':sports,
             'items':items, 
             'students':students,
-            'checkouts':checkouts,
             })
 
     def post(self, request, *args, **kwargs):
@@ -153,6 +172,11 @@ class CheckoutView(View):
                 sport =Sport.objects.filter(name=sport_name).first()
                 item  =Item.objects.filter(name=item_name,brand=brand,quality=quality,sport_type=sport).first()
                 item.available -=int(quantity)
+                
+                if item.available < 0:
+                    messages.error(request,"Dublicate Data is entered ")
+                    return redirect('checkout')
+
                 item.save()
                 # print(item.available,"xdcfvgbhnjmk,")
 
@@ -160,9 +184,32 @@ class CheckoutView(View):
                 new_item.save()
                 checkout.item_list.add(new_item)
 
+                list_of_items.append([
+                    sport_name,
+                    item_name,
+                    brand,
+                    quality,
+                    quantity,
+                ])
+
                 # print(item.available,new_item)
 
-            # print(roll_no,list_of_item_input)
+            print(roll_no,list_of_items)
+            html_message=render_to_string('mail/CheckoutMail.html',{
+                'date':checkout.date_of_issue,
+                'roll_no':roll_no,
+                'items_detail':list_of_items,
+            })
+            
+            # send_mail(
+            #     'Checkout Detail',
+            #     '',
+            #     'kaporkhanasharma@gmail.com',
+            #     ['kaporkhanasharma@gmail.com'],
+            #     fail_silently=False,
+            #     html_message=html_message,
+            # )
+            
             return redirect('checkout')
 
 class CheckinView(View):
@@ -170,24 +217,47 @@ class CheckinView(View):
         if request.method=="GET":
             checkout_id=kwargs["checkout_pk"]
 
+            list_of_items=[]
             checkout =Checkout.objects.get(id=checkout_id)
             if not checkout.checkin_status:
-                checkout.checkin_status=True
-                checkout.save()
                 item_list=list(checkout.item_list.values())
                 for i in item_list:
                     item            =Item.objects.get(id=i['item_id'])
                     item.available +=i['item_quantity']
                     item.save()
                     print(item.available)
-                
+                    
+                    list_of_items.append([
+                        item.sport_type.name,
+                        item.name,
+                        item.brand,
+                        item.quality,
+                        i['item_quantity'],
+                    ])
+                    
                 checkin =Checkin(checkout_item=checkout)
                 checkin.save()
+
+                html_message=render_to_string('mail/CheckoutMail.html',{
+                    'date':checkin.date_of_submit,
+                    'roll_no':checkin.checkout_item.student_name.roll_no,
+                    'items_detail':list_of_items,
+                })
+                # print(html_message)
+                print(checkin.date_of_submit)
+                # send_mail(
+                #     'Checkout Detail',
+                #     '',
+                #     'kaporkhanasharma@gmail.com',
+                #     ['kaporkhanasharma@gmail.com'],
+                #     fail_silently=False,
+                #     html_message=html_message,
+                # )
+                
+                checkout.checkin_status=True
+                checkout.save()
                 return redirect('checkout')
             else:
                 messages.error(request,"Already checkin")
                 return redirect('checkout')
-    
-    def post(self, request, *args, **kwargs):
-        pass
 
