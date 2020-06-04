@@ -19,9 +19,8 @@ from .models import Checkout
 
 class HomeView(View):
     template_name = 'layout.html'
-    sport   = list(Sport.objects.values())
     def get(self, request, *args, **kwargs):
-        return render(request,self.template_name,{'sport':self.sport})
+        return render(request,self.template_name)
 
 class SportCreateView(View):
     def post(self,request):
