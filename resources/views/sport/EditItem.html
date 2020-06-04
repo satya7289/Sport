@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block head %} 
+<title>  Sport Item </title> 
+{% endblock %}
+
+
+{% block nav %}
+<a class="navbar-brand" href="{% url 'home' %}"><span style="font-family: 'Open+Sans';">&nbspInventory Management</span></a>
+   
+{% endblock %}
+
+
+{% block content %}
+
+<div class="outer-w3-agile mt-3">
+    <h4 class="tittle-w3-agileits mb-4"> Update {{ item.sport_type }}'s Equipment </h4>
+    <hr>
+    <small class="text-danger">
+        {% if error %}
+        {{ error }}
+        {% endif %}
+    </small>
+    <form action="{% url 'edit-item' sport_pk=sport_pk%}?id={{ item.id }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required value="{{ item.name }}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="brand">Brand</label>
+                <input type="text" class="form-control" id="brand" name="brand" placeholder="Brand" required value="{{ item.brand }}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="quality">Quality</label>
+                <select class="form-control" id="quality"  name="quality">
+                    <option selected="selected">New</option>
+                    <option>Used</option>
+                    <option>Damaged</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                    <label for="Quantity">Quantity</label><br>
+                    <span id="Quantity">{{ item.quantity }}</span>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="description">Description</label>
+                <textarea type="text" class="form-control" id="description" name="description" placeholder="Description" ></textarea>
+            </div>
+
+            <!-- image field -->
+        </div>
+       
+       
+        <button type="submit" class="btn btn-primary" style="margin-inline-start: 50%;">Update</button>
+    </form>
+</div>
+
+{% endblock %}

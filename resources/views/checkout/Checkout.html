@@ -5,10 +5,17 @@
  <link rel="stylesheet" href="{% static 'css/item.css' %}">
 {% endblock %}
 
+{% block nav %}
+<a class="navbar-brand" href="{% url 'home' %}"><span style="font-family: 'Open+Sans';">&nbspInventory Management</span></a>
+   
+{% endblock %}
+
+
 {% block content %}
 
 <div class="d-flex justify-content-around">
-    <button class="btn btn-light" onclick="back()"><i class="fas fa-chevron-circle-left fa-2x"></i></button>
+        
+        <a href="#" class="btn btn-secondary"  onclick="back()"><i class="fas fa-chevron-circle-left"></i>&nbsp;Back</a>
     <h4 class="tittle-w3-agileits"> <b>Checkout</b> </h4>
 </div>
 <hr>
@@ -35,7 +42,7 @@
                 {% endfor %}
             </select>
         </div>
-        <button class="btn btn-primary mt-3" style="margin-inline-start: 45%;" onclick="ShowCheckoutDetail()" id="procced">Procced</button>
+        <button class="btn btn-secondary mt-3" style="margin-inline-start: 45%;" onclick="ShowCheckoutDetail()" id="procced">Procced</button>
 </div>
 
 
@@ -63,9 +70,9 @@
                             </select>
                         </td>
                         <td>
-                                <select class="form-control" id="select-item">   
-                                </select>
-                            </td>
+                            <select class="form-control" id="select-item">   
+                            </select>
+                        </td>
                         <td>
                             <select class="form-control" id="select-brand">
                             </select>
@@ -82,11 +89,12 @@
             </tbody> 
         </table>
         <div class="d-flex justify-content-between">
-                <button class="btn btn-light" id="AddItem" onclick="Refresh()"> <i class="fas fa-redo-alt fa-4x"></i></button>
-                <button class="btn btn-light" id="AddItem" onclick="AddItem()"><i class="fas fa-plus-circle fa-4x"></i></button> 
+            <a href="#" class="btn btn-secondary" id="AddItem" onclick="Refresh()"><i class="fas fa-redo-alt"></i>&nbsp;Refresh</a>
+            <a href="#" class="btn btn-secondary" id="AddItem" onclick="AddItem()"><i class="fas fa-plus-circle"></i></i>&nbsp;Add</a>
         </div>
+        
         <hr class="mt-2">
-    <a href="#checkout"><button class="btn btn-primary" style="margin-inline-start: 45%;">Checkout</button></a>
+    <a href="#checkout"><button class="btn btn-secondary" style="margin-inline-start: 45%;">Checkout</button></a>
     </div>
     <div class="outer-w3-agile table-responsive mt-3" id="checkout">
         <h4 class="tittle-w3-agileits mb-4">Satya (B17CS048) </h4>
@@ -144,25 +152,29 @@ $(document).ready(function(){
                     sport:sport,
                 },
                 dataType: 'json',
-                success:function(data){
+                success:function(response){
                     let content="";
-                    if(data["status"]==1){
-                        for(var i in data.query){
+                    if(response["status"]==1){
+                        for(var i in response.types){
                             content +="<option>";
-                            content += data["query"][i]["name"];
+                            content += response['types'][i];
                             content +="</option>";
-                            console.log(data["query"][i]["name"])
                         }
                     }
                     $("#select-item").html(content);
-                    $("#select-brand").html("<option>"+data["query"][0]["brand"]+"</option>");
-                    $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
-                    let available = data["query"][0]["available"];
-                    Qcontent=""
-                    for(let i=1;i<=available;i++){
-                        Qcontent += "<option>"+i+"</option>";
-                    }
-                    $("#select-quantity").html(Qcontent);
+                    $("#select-item").val(false);
+                    $("#select-brand").html("");
+                    $("#select-quality").html("");
+                    $("#select-quantity").html("");
+
+                    // $("#select-brand").html("<option>"+response["query"][0]["brand"]+"</option>");
+                    // $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
+                    // let available = data["query"][0]["available"];
+                    // Qcontent=""
+                    // for(let i=1;i<=available;i++){
+                    //     Qcontent += "<option>"+i+"</option>";
+                    // }
+                    // $("#select-quantity").html(Qcontent);
                 }
             });
         });
@@ -178,24 +190,27 @@ $(document).ready(function(){
                     item:item
                 },
                 dataType: 'json',
-                success:function(data){
+                success:function(response){
                     let content="";
-                    if(data["status"]==1){
-                        for(var i in data.query){
+                    if(response["status"]==1){
+                        for(var i in response.types){
                             content +="<option>";
-                            content += data["query"][i]["brand"];
+                            content += response["types"][i];
                             content +="</option>";
-                            console.log(data["query"][i]["brand"])
                         }
                     }
                     $("#select-brand").html(content);
-                    $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
-                    let available = data["query"][0]["available"];
-                    Qcontent=""
-                    for(let i=1;i<=available;i++){
-                        Qcontent += "<option>"+i+"</option>";
-                    }
-                    $("#select-quantity").html(Qcontent);
+                    $("#select-brand").val(false);
+                    $("#select-quality").html("");
+                    $("#select-quantity").html("");
+
+                    // $("#select-quality").html("<option>"+data["query"][0]["quality"]+"</option>");
+                    // let available = data["query"][0]["available"];
+                    // Qcontent=""
+                    // for(let i=1;i<=available;i++){
+                    //     Qcontent += "<option>"+i+"</option>";
+                    // }
+                    // $("#select-quantity").html(Qcontent);
                 }
             });
         });
@@ -212,23 +227,25 @@ $(document).ready(function(){
                     brand:brand,
                 },
                 dataType: 'json',
-                success:function(data){
+                success:function(response){
                     let content="";
-                    if(data["status"]==1){
-                        for(var i in data.query){
+                    if(response["status"]==1){
+                        for(var i in response.types){
                             content +="<option>";
-                            content += data["query"][i]["name"];
+                            content += response["types"][i];
                             content +="</option>";
-                            console.log(data["query"][i]["name"])
+                            
                         }
                     }
                     $("#select-quality").html(content);
-                    let available = data["query"][0]["available"];
-                    Qcontent=""
-                    for(let i=1;i<=available;i++){
-                        Qcontent += "<option>"+i+"</option>";
-                    }
-                    $("#select-quantity").html(Qcontent);
+                    $("#select-quality").val(false);
+                    $("#select-quantity").html("");
+                    // let available = data["query"][0]["available"];
+                    // Qcontent=""
+                    // for(let i=1;i<=available;i++){
+                    //     Qcontent += "<option>"+i+"</option>";
+                    // }
+                    // $("#select-quantity").html(Qcontent);
                     // $("select-quantity").html("Fvf");
                 }
             });
@@ -244,26 +261,20 @@ $(document).ready(function(){
                     sport:sport,
                     item:item,
                     brand:brand,
-                    quality:quantity,
+                    quality:quality,
                 },
                 dataType: 'json',
-                success:function(data){
+                success:function(response){
                     let content="";
-                    if(data["status"]==1){
-                        for(var i in data.query){
-                            content +="<option>";
-                            content += data["query"][i]["name"];
-                            content +="</option>";
-                            console.log(data["query"][i]["name"])
+                    console.log(response);
+                    if(response["status"]==1){
+                        for(let i=1;i<=response["types"];i++){
+                            content += "<option>"+i+"</option>";
+                        console.log(response)
                         }
                     }
                     $("#select-quantity").html(content);
-                    let available = data["query"][0]["available"];
-                    Qcontent=""
-                    for(let i=1;i<=available;i++){
-                        Qcontent += "<option>"+i+"</option>";
-                    }
-                    $("#select-quantity").html(Qcontent);
+                    $("#select-quantity").val(false);
                 }
             });
         });

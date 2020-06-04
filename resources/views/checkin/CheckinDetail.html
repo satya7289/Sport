@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block head %}
+ <title>Checkin Detail </title>
+ <link rel="stylesheet" href="{% static 'css/item.css' %}">
+{% endblock %}
+
+{% block nav %}
+<a class="navbar-brand" href="{% url 'checkin-list' %}"><span style="font-family: 'Open+Sans';">&nbsp;Inventory Management</span></a>
+   
+{% endblock %}
+
+
+{% block content %}
+
+<div class="outer-w3-agile table-responsive mt-3">
+        <h4 class="tittle-w3-agileits mt-0"> Checkout Detail </h4>
+    <hr>
+    <h6><u>Student Detail: </u></h6>
+        <p ><label>First Name: &nbsp</label><span class="text-muted">{{ checkout.student_name.first_name }}</span></p>
+        <p ><label>Last Name: &nbsp</label><span class="text-muted">{{ checkout.student_name.last_name }}</span></p>
+        <p ><label>Roll No: &nbsp</label><span class="text-muted">{{ checkout.student_name.roll_no }}</span></p>
+        <p ><label>Email: &nbsp</label><span class="text-muted">{{ checkout.student_name.email }}</span></p>
+        <p ><label>Team: &nbsp</label><span class="text-muted">{{ checkout.student_name.team.first.name }}</span></p>
+        <p ><label>Date of Issue: &nbsp</label><span class="text-muted">{{ checkout.date_of_issue }}</span></p>
+    <br>
+    <h6><u>Equipment Detail:</u>&nbsp; {{ checkout.item_list.count }}</h6>
+    <table class="table table-bordered table-striped" id="final-table">
+        <thead>
+        <tr>
+            <th>Sport </th>
+            <th>Equipment</th>
+            <th>Brand</th>
+            <th>Quality</th>
+            <th>Quantity</th> 
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody >   
+            {% for item in checkout.item_list.all %}
+            <tr>
+                <td>{{ item.item.sport_type.name }}</td>
+                <td>{{ item.item.name }}</td>
+                <td>{{ item.item.brand }}</td>
+                <td id="table-quality-{{ forloop.counter }}">{{ item.item.quality }}</td>
+                <td id="table-quantity-{{ forloop.counter }}">{{ item.item_quantity }}</td>
+                <td>
+                        <a href="#" id="table-edit-button-{{ forloop.counter }}" class="btn btn-info" data-id="{{ forloop.counter }}" data-quality="{{ item.item.quality }}" data-quantity="{{ item.item_quantity }}" 
+                        onclick="CheckinEdit(this,$(this).attr('data-quality'),$(this).attr('data-quantity'),$(this).attr('data-id') )">
+                        <i class="fas fa-edit"></i>Edit</a>
+
+                        <a href="#" id="table-save-button-{{ forloop.counter }}" class="btn btn-info table-save-button" data-id="{{ forloop.counter }}" data-quality="{{ item.item.quality }}" data-quantity="{{ item.item_quantity }}" 
+                        onclick="CheckinSave(this,$(this).attr('data-id') )">
+                        Save</a>
+                </td>
+            </tr>
+            
+            {% endfor %}    
+        </tbody> 
+    </table>
+
+    <form action="{% url 'post-checkin' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="checkout-id" value="{{ checkout.id }}">
+        <input type="hidden" name="total" value="{{ checkout.item_list.count }}">
+        {% for item in checkout.item_list.all %}
+              <input id="form-item-id-{{ forloop.counter }}" type="hidden" name="form-item-id-{{ forloop.counter }}" value="{{ item.item.id }}">
+              <input id="form-item-quality-{{ forloop.counter }}" type="hidden" name="form-item-quality-{{ forloop.counter }}" value="{{ item.item.quality  }}">
+              <input id="form-item-quantity-{{ forloop.counter }}" type="hidden" name="form-item-quantity-{{ forloop.counter }}" value="{{ item.item_quantity }}">
+        {% endfor %}
+        <div id="checkin-form-data">
+        </div>
+           <button type="submit" id="checkin-button" class="btn btn-primary mt-3" style="margin-inline-start: 45%;">Checkin</button>
+    </form>
+
+</div>
+
+{% endblock %}
+{% block script %}
+<script>
+$(document).ready(()=>{
+    $(".table-save-button").hide();
+});
+function CheckinEdit(e,quality,quantity,id){
+    let content=' <select class="form-control">';
+        content+='<option selected='+quality+'>'+quality+'</option>';
+        content+='<option>New</option>';
+        content+='<option>Used</option>';
+        content+='<option>Damaged</option>';
+        content+='<option>Lost</option>';
+        content+= '</select>';
+        $("#table-quality-"+id).html(content);
+
+    let content2= '<select class="form-control">';
+        for(let i=0;i<=quantity;i++){
+            content2+='<option>'+ i +'</option>';
+        }
+        content2+= '</select>';
+        $("#table-quantity-"+id).html(content2);
+
+    $("#table-edit-button-"+id).hide();
+    $("#table-save-button-"+id).show();
+    $("#checkin-button").attr("disabled",true);
+    // $("#table-edit-button-"+id).attr("id",'table-save-button-'+id);
+}
+
+function CheckinSave(e,id){
+    
+    let quality=$("#table-quality-"+id+" > select option:selected").text();
+    let quantity=$("#table-quantity-"+id+" > select option:selected").text();
+    $("#table-quality-"+id).html(quality);
+    $("#table-quantity-"+id).html(quantity);
+    $("#form-item-quality-"+id).attr("value",quality);
+    $("#form-item-quantity-"+id).attr("value",quantity);
+
+    $("#table-save-button-"+id).hide();
+    $("#table-edit-button-"+id).show();
+    $("#checkin-button").attr("disabled",false);
+
+}
+</script>
+{% endblock %}

@@ -5,8 +5,8 @@ var count=0;
 function AddItem(){
     let tableBody      =document.getElementById("final-table-body");
     var content ="";
-    let del = '<td><button class="btn" onclick="DeleteItem(this)" id="'+ count +'"><i class="fas fa-minus-circle"></i></button></td>';
-   
+    let del = '<td>  <a href="#" class="btn btn-secondary"onclick="DeleteItem(this)" id="'+ count +'"><i class="fas fa-minus-circle"></i>&nbsp;Remove</a></td>';
+  
     $(document).ready(function(){
         let sport   =$("#select-sport option:selected").text();
         let item    =$("#select-item option:selected").text();

@@ -5,76 +5,125 @@
  <link rel="stylesheet" href="{% static 'css/item.css' %}">
 {% endblock %}
 
-{% block content %}
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><h3>{{ sport.name }}</h3></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="{% url 'search_sport' item_pk=id%}" method="get" class="form-inline mx-auto search-form">
-            
-            <input class="form-control mr-sm-2" type="search" placeholder="Search Items" aria-label="Search" required="" name="q" value="{% if q%}{{q}}{% endif%}">
-            <select class="form-control mr-sm-2" name="type">
-                <option selected="selected">All</option>
-                <option>Name</option>
-                <option>Brand</option>
-                <option>Quality</option>
-            </select>
-            <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <ul class="top-icons-agileits-w3layouts float-right">
-            <li class="nav-item">
-                <a href="{% url 'add_item' sport_pk=id %}"><i class="fas fa-plus-circle"></i>Add</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+{% block nav %}
+<a class="navbar-brand" href="#"><h3>&nbsp;&nbsp;{{ sport.name }}</h3></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
 
-
-
-<div class="table-responsive mt-2">
-    {% if items %}
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>S.no</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Brand</th>
-            <th>Quantity</th>
-            <th>Quality</th>
-            <th>Available</th>
-            <th>Update</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {% for item in items %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.description }}</td>
-                <td>{{ item.brand }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>{{ item.quality }}</td>
-                <td>{{ item.available }}</td>
-                <td>
-                    <a href="#" class="btn btn-info pull-left" style="margin-right: 3px;">Update</a>
-
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-
-    </table>
-    {% else %}
-        No item found.
-    {% endif %}
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <form action="{% url 'search_sport' item_pk=id%}" method="get" class="form-inline mx-auto search-form">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search Items" aria-label="Search" required="" name="q" value="{% if q%}{{q}}{% endif%}">
+        <select class="form-control mr-sm-2" name="type">
+            <option selected="selected">All</option>
+            <option>Name</option>
+            <option>Brand</option>
+            <option>Quality</option>
+        </select>
+        <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <ul class="top-icons-agileits-w3layouts float-right">
+        <li class="nav-item">
+            <a href="{% url 'add_item' sport_pk=id %}" class="btn btn-info"><i class="fas fa-plus-circle"></i>Add</a>
+        </li>
+    </ul>
 </div>
 
+{% endblock %}
+
+{% block content %}
+
+<div class="fluid-container">
+    {% if items %}
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Quantity</th>
+                <th>Quality</th>
+                <th>Available</th>
+                <th>Created_at</th>
+                <th>Updated_at</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.brand }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.quality }}</td>
+                    <td>{{ item.available }}</td>
+                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.updated_at }}</td>
+                    <td>
+                        <a href="{% url 'edit-item' sport_pk=id %}?id={{ item.id }}" class="btn btn-info"><i class="fas fa-edit"></i>Edit</a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+        {% else %}
+            No item found.
+        {% endif %}
+    </div>
+
+
+    <nav>
+        {% if items.has_other_pages %}
+        <ul class="pagination justify-content-center">
+        
+            {% if items.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ items.previous_page_number }}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+    `       <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            
+
+            {% for i in items.paginator.page_range %}
+                {% if items.number == i %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if items.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ items.next_page_number }}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endblock %}
 
 <!-- <div id="imagecontrol1" class="carousel slide" data-ride="carousel">
