@@ -10,6 +10,8 @@ from .views import CheckoutView
 from .views import CheckinView
 from .views import StudentCreateView
 from .views import CheckoutDetailView
+from .views import SearchItemView
+from .views import SearchStudentView
 
 from . import api_view
 
@@ -21,9 +23,11 @@ urlpatterns = [
     path('additem/<int:sport_pk>/',ItemCreateView.as_view(),name='add_item'),
     path('item/<int:item_pk>/',ItemListView.as_view(),name='list_item'),
     path('addsport/',SportCreateView.as_view(),name='add_sport'),
+    path('item/<int:item_pk>/search',SearchItemView.as_view(),name='search_sport'),
 
     path('students/',StudentListView.as_view(),name='students'),
     path('addstudent/',StudentCreateView.as_view(),name='add_student'),
+    path('students/search',SearchStudentView.as_view(),name='search_student'),
 
     path('checkout/detail',CheckoutDetailView.as_view(),name='checkout-detail'),
     path('checkout/',CheckoutView.as_view(),name='checkout'),

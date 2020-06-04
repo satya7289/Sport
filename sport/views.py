@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 from .models import Sport
 from .models import Item
@@ -79,10 +80,7 @@ class ItemListView(View):
 class StudentListView(View):
     template_name   ='student/Students.html'
     def get(self, request, *args, **kwargs):
-        students = list(Student.objects.values())
-        for student in students:
-            sport = Student.objects.get(id=student['id']).team.first().name
-            student['sport']=sport
+        students = Student.objects.all()
         return render(request,self.template_name,{'students':students})
         
 
@@ -260,4 +258,44 @@ class CheckinView(View):
             else:
                 messages.error(request,"Already checkin")
                 return redirect('checkout')
+
+class SearchItemView(View):
+    template_name='sport/Item.html'
+    def get(self, request, *args, **kwargs):
+        id = kwargs['item_pk']
+        sport = Sport.objects.get(id=id)
+        search_query = request.GET.get('q','')
+        search_type = request.GET.get('type','')
+        if search_type=='Name':
+            data = Item.objects.filter(name__contains=search_query)
+        elif search_type=='Brand':
+            data = Item.objects.filter(brand__contains=search_query)
+        elif search_type=='Quality':
+            data = Item.objects.filter(quality__contains=search_query)
+        elif search_type=='All':
+            data = Item.objects.filter(
+                Q(brand__contains=search_query) |
+                Q(name__contains=search_query) |
+                Q(quality__contains=search_query)
+            )
+        return render(request,self.template_name,{'items':data,'id':id,'sport':sport,'q':search_query})
+
+class SearchStudentView(View):
+    template_name='student/Students.html'
+    def get(self, request, *args, **kwargs):
+        search_query = request.GET.get('q','')
+        search_type = request.GET.get('type','')
+        if search_type=="Name":
+            students = Student.objects.filter(Q(first_name__contains=search_query)|Q(last_name__contains=search_query))
+        elif search_type=='RollNo':
+            students = Student.objects.filter(Q(roll_no__contains=search_query))
+        elif search_type=='Email':
+            students = Student.objects.filter(Q(email__contains=search_query))
+        elif search_type=='All':
+            students = Student.objects.filter(
+                Q(first_name__contains=search_query)|
+                Q(last_name__contains=search_query)|
+                Q(email__contains=search_query))
+        return render(request,self.template_name,{'students':students,'q':search_query})
+
 

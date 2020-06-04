@@ -14,8 +14,15 @@
     </button>
   
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="#" method="post" class="form-inline mx-auto search-form">
-            <input class="form-control mr-sm-2" type="search" placeholder="Name" aria-label="Search" required="">
+        <form action="{% url 'search_sport' item_pk=id%}" method="get" class="form-inline mx-auto search-form">
+            
+            <input class="form-control mr-sm-2" type="search" placeholder="Search Items" aria-label="Search" required="" name="q" value="{% if q%}{{q}}{% endif%}">
+            <select class="form-control mr-sm-2" name="type">
+                <option selected="selected">All</option>
+                <option>Name</option>
+                <option>Brand</option>
+                <option>Quality</option>
+            </select>
             <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
         </form>
         <ul class="top-icons-agileits-w3layouts float-right">
@@ -29,6 +36,7 @@
 
 
 <div class="table-responsive mt-2">
+    {% if items %}
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
@@ -62,6 +70,9 @@
         </tbody>
 
     </table>
+    {% else %}
+        No item found.
+    {% endif %}
 </div>
 
 {% endblock %}
