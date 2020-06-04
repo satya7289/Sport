@@ -16,7 +16,7 @@ from .views import SearchStudentView
 from . import api_view
 
 urlpatterns = [
-    #path('',TemplateView.as_view(template_name='home.html'))
+    path('',TemplateView.as_view(template_name='home.html'))
 
     path('',HomeView.as_view(),name='home'),
     path('item/',TemplateView.as_view(template_name="sport/CreateItem.html")),
