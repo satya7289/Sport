@@ -33,36 +33,50 @@
 </head>
 
 <body>
-<nav class="navbar navbar-default sticky-top nav--primary">
+<!--<nav class="navbar navbar-default sticky-top nav--primary">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
+        shj
     </div>
+</nav>-->
+<nav class="navbar navbar-expand-lg sticky-top navbar-light bg-light">
+    <div class="navbar-header">
+        <button type="button" id="sidebarCollapse" class="btn btn-info navbar-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+        {% block nav %}
+        {% endblock %}
+    
 </nav>
+
+
 
 <div class="wrapper">
     <!-- Sidebar Holder -->
     <nav id="sidebar" class="nav--side">
         <div class="sidebar-header">
             <h1>
-                <a href="{% url 'home' %}">Sports</a>
+                <a href="{% url 'checkin-list' %}">Sports</a>
             </h1>
             <span>S</span>
         </div>
         <div class="profile-bg"></div>
         <ul class="list-unstyled components">
             <li class="active">
-                <a href="#">
-                    <i class="fas fa-th-large"></i>
-                    Dashboard
+                <a href="{% url 'checkin-list' %}">
+                    <i class="fas fa-cart-arrow-down"></i>
+                    Checkin
                 </a>
             </li>
             <li>
                 <a href="{% url 'checkout' %}">
-                    <i class="fas fa-shopping-cart"></i>
+                <i class="fas fa-cart-plus"></i>    
                     Checkout
                 </a>
             </li>

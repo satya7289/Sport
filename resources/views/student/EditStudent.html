@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block head %} 
+<title> Update Student Detail</title> 
+{% endblock %}
+
+{% block nav %}
+<a class="navbar-brand" href="{% url 'home' %}"><span style="font-family: 'Open+Sans';">&nbspInventory Management</span></a>
+   
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="outer-w3-agile mt-3">
+    <h4 class="tittle-w3-agileits mb-4"> Update Student Detail</h4>
+    <h6 class="text-danger">
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    </h6>
+    <form action="{% url 'edit-student' %}?id={{ student.id }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="first-name">First Name</label>
+                <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First Name" required value="{{ student.first_name }}">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="last-name">Last Name</label>
+                <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last Name" value="{{ student.last_name }}">
+            </div>
+            <div class="form-group col-md-12">
+                    <label for="roll-no">Roll No</label><br>
+                    <span id="roll-no"> {{ student.roll_no }}</span>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="sharma.20@iitj.ac.in" required value="{{ student.email}}"> 
+            </div>
+            <div class="form-group col-md-12">
+                <label for="sport-name">Sport</label>
+                <select class="form-control" id="sport-name"  name="sport-name">
+                    <option selected="selected">{{ sport }}</option>
+                </select>
+            </div>
+        </div>
+       
+        <br>
+    
+       
+        <button type="submit" class="btn btn-primary" style="margin-inline-start: 50%;">Update</button>
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+
+// Ajax call getting all sports name
+$(document).ready(()=>{
+    $("#sport-name").one( "click", ()=> {
+        $.ajax({
+            type :"GET",
+            url  :"{% url 'all_sport' %}",
+            dataType: 'json',
+            success:function(response){
+                for(var res in response){
+                    content += " <option>"+response[res]["name"]+"</option>";
+                }
+                $("#sport-name").html(content);
+
+            }
+        });
+    });
+});
+   
+</script>
+{% endblock %}

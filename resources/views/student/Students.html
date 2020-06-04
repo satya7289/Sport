@@ -5,75 +5,115 @@
  <link rel="stylesheet" href="{% static 'css/item.css' %}">
 {% endblock %}
 
-{% block content %}
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#"><span>Students</span></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+{% block nav %}
+<a class="navbar-brand" href="#"><span>&nbsp;&nbsp;Students</span></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
   
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <form action="{% url 'search_student' %}" method="get" class="form-inline mx-auto search-form">
-            <input class="form-control mr-sm-2" type="search" placeholder="Name" aria-label="Search" required="", name="q" value="{% if q%}{{q}}{% endif%}">
-            <select class="form-control mr-sm-2" name="type">
-                <option selected="selected">All</option>
-                <option>Name</option>
-                <option>RollNo</option>
-                <option>Email</option>
-            </select>
-            <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <ul class="top-icons-agileits-w3layouts float-right">
-            <li class="nav-item">
-                <a href="{% url 'add_student' %}"><i class="fas fa-plus-circle"></i>Add</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-
-
-<div class="table-responsive mt-2">
-    {% if students %}
-    <table class="table table-bordered table-striped">
-        <thead>
-        <tr>
-            <th>S.no</th>
-            <th>FirstName</th>
-            <th>LastName</th>
-            <th>RollNO</th>
-            <th>Email</th>
-            <th>Sport</th>
-            <th>Update</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        {% for student in students %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ student.first_name }}</td>
-                <td>{{ student.last_name }}</td>
-                <td>{{ student.roll_no }}</td>
-                <td>{{ student.email }}</td>
-                    <td>
-                        {% for t in student.team.all %}
-                            {{ t.name }}&nbsp;
-                        {% endfor %}
-
-                    </td>
-                    <td>
-                        <a href="#" class="btn btn-info pull-left" style="margin-right: 3px;">Update</a>
-
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        No student found.
-    {% endif %}
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <form action="{% url 'search_student' %}" method="get" class="form-inline mx-auto search-form">
+        <input class="form-control mr-sm-2" type="search" placeholder="Name" aria-label="Search" required="", name="q" value="{% if q%}{{q}}{% endif%}">
+        <select class="form-control mr-sm-2" name="type">
+            <option selected="selected">All</option>
+            <option>Name</option>
+            <option>RollNo</option>
+            <option>Email</option>
+        </select>
+        <button class="btn btn-style my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    <ul class="top-icons-agileits-w3layouts float-right">
+        <li class="nav-item">
+            <a href="{% url 'add_student' %}" class="btn btn-info"><i class="fas fa-plus-circle"></i>Add</a>
+        </li>
+    </ul>
 </div>
 
+{% endblock %}
+
+{% block content %}
+<div class="fluid-container">
+    {% if students %}
+    <div class="table-responsive mt-2">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>S.no</th>
+                <th>RollNO</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Sport</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td id="student-rollno-{{student.roll_no }}">{{ student.roll_no }}</td>
+                    <td>{{ student.first_name }}</td>
+                    <td>{{ student.last_name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.team.first }}</td>
+                    <td>
+                        <a href="{% url 'edit-student' %}?id={{ student.id }}" class="btn btn-info"><i class="fas fa-edit"></i>Edit</a>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+        {% else %}
+            No student found.
+        {% endif %}
+    </div>
+
+
+    <nav>
+        {% if students.has_other_pages %}
+        <ul class="pagination justify-content-center">
+        
+            {% if students.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.previous_page_number }}">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+    `       <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            
+
+            {% for i in students.paginator.page_range %}
+                {% if students.number == i %}
+                    <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if students.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.next_page_number }}">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endblock %}

@@ -5,64 +5,129 @@
  <link rel="stylesheet" href="{% static 'css/item.css' %}">
 {% endblock %}
 
+{% block nav %}
+<a class="navbar-brand" href="{% url 'home' %}"><span style="font-family: 'Open+Sans';">&nbspInventory Management</span></a>
+   
+{% endblock %}
+
+
 {% block content %}
 
-<div class="outer-w3-agile table-responsive" id="all-checkout">
-    <h4 class="tittle-w3-agileits mb-4">Checkout Detail </h4>
-    <hr>
-    <table class="table table-bordered table-striped" id="final-table">
-        <thead>
-        <tr>
-                <th>S.no</th>
-                <th>Name</th>
-                <th>Date of Issue</th>
-                <th>Checkin Status</th>
-                <th>Date of Submission</th>
-                <th>Action</th>
-        </tr>
-        </thead>
-        <tbody> 
-            {% for checkout in checkouts %}   
+<div class="fluid-container">
+    <div class="outer-w3-agile table-responsive" id="all-checkout">
+        <h4 class="tittle-w3-agileits mb-4">Checkout Detail </h4>
+        <hr>
+        <table class="table table-bordered table-striped" id="final-table">
+            <thead>
             <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ checkout.roll_no }}</td>
-                <td>{{ checkout.date_of_issue }}</td>
-                <td>
-                    {% if not checkout.checkin_status %}
-                    <a href="{% url 'checkin' checkout_pk=checkout.id %}"><button type="button" class="btn btn-primary" >CheckedIn</button></a>
-                    {% else %}
-                     CheckedIn
-                    {% endif %}
-                </td>
-                <td>{{ checkout.date_of_submit }}</td>
-                <td>
-                    <button type="button" data-id="{{ checkout.id }}"  onclick="Detail($(this).attr('data-id'))" class="btn btn-info"  data-toggle="modal" data-target="#model{{ checkout.id }}">Detail</button>
-                </td>
-            </tr>  
-            
-            <div class="modal fade" id="model{{ checkout.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel{{ checkout.id }}" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title" id="ModalLabel{{ checkout.id }}"> Checkout Detail</h3>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body" style="width: 100%; height:75vh; overflow-y: scroll;" id="model-body{{ checkout.id }}">
-                            <!-- <img class="card-img-top" src="#" alt="Card image cap"> -->
+                    <th>S.no</th>
+                    <th>Name</th>
+                    <th>Date of Issue</th>
+                    <th>Checkin Status</th>
+                    <th>Date of Submission</th>
+                    <th>Action</th>
+            </tr>
+            </thead>
+            <tbody> 
+                {% for checkout in checkouts %}   
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ checkout.student_name }}</td>
+                    <td>{{ checkout.date_of_issue }}</td>
+                    <td>
+                        {% if not checkout.checkin_status %}
+                        <a href="{% url 'checkin-detail' checkout_pk=checkout.id %}"><button type="button" class="btn btn-primary" >CheckIn</button></a>
+                        {% else %}
+                            CheckedIn
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if not checkout.checkin_status %}
                         
-                        <div class="modal-footer">
-                             <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            {% if checkout.checkin.updated_at %}
+                                {{ checkout.checkin.updated_at }}
+                            {% else %}
+                                <span>-</span>
+                            {% endif %}
+                        {% else %}
+                            {{ checkout.checkin.date_of_submit }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button type="button" data-id="{{ checkout.id }}"  onclick="Detail($(this).attr('data-id'))" class="btn btn-info"  data-toggle="modal" data-target="#model{{ checkout.id }}">Detail</button>
+                    </td>
+                </tr>  
+                
+                <div class="modal fade" id="model{{ checkout.id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLabel{{ checkout.id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="ModalLabel{{ checkout.id }}"> Checkout Detail</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="width: 100%; height:75vh; overflow-y: scroll;" id="model-body{{ checkout.id }}">
+                                <!-- <img class="card-img-top" src="#" alt="Card image cap"> -->
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-    
-            {% endfor %}
-        </tbody> 
-    </table>
+        
+                {% endfor %}
+            </tbody> 
+        </table>
+
+        <nav>
+                {% if checkouts.has_other_pages %}
+                <ul class="pagination justify-content-center mt-3">
+                
+                    {% if checkouts.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ checkouts.previous_page_number }}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+            `       <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+        
+                    {% for i in checkouts.paginator.page_range %}
+                        {% if checkouts.number == i %}
+                            <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+        
+                    {% if checkouts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ checkouts.next_page_number }}">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                {% endif %}
+                </ul>
+            </nav>
+    </div>
+   
 </div>
+
 
 {% endblock %}
 {% block script %}
@@ -87,25 +152,29 @@ function Detail(CheckoutId){
                     content += '<p ><label>Roll No: &nbsp</label><span class="text-muted">'+ response["query"]["roll_no"]+'</span> </p>';
                     content += '<p ><label>Email : &nbsp</label><span class="text-muted">'+ response["query"]["email"]+'</span> </p>';
                     content += '<p ><label>Sport : &nbsp</label><span class="text-muted">'+ response["query"]["sport"]+'</span> </p>';
-                    content += '<h6 class="p-1 mt-2">Equipment Detail<hr></h6>';
-                    content += '<p ><label>Total: &nbsp</label><span class="text-muted">'+ response["query"]["total_items"] +'</span> </p>';
-
-                    content += '<br>';
-                    content += '<div class="d-flex justify-content-around">';
-                    let itemID ='<div class="d-flex flex-column">  <b>Item ID</b>';
-                    let itemQuantity='<div class="d-flex flex-column"> <b>Item Quantity</b>';
-                    for(let i=0; i<response["query"]["total_items"];i++){
-                       
-                        let items = response["query"]["items"][i.toString()];
-
-                        itemID += '<p >'+ items["item_id"] +'</p>';
-                        itemQuantity += '<p >'+ items["item_quantity"]  +'</p>';
-                    }
-                    itemID += '</div>';
-                    itemQuantity+='</div>';
                     
-                    content += itemID +itemQuantity +'</div>';
-                    $("#model-body"+CheckoutId).html(content);
+                    if(response["query"]["total_items"]>0){
+                        content += '<h6 class="p-1 mt-2">Equipment Detail<hr></h6>';
+                        content += '<p ><label>Total: &nbsp</label><span class="text-muted">'+ response["query"]["total_items"] +'</span> </p>';
+                        content += '<br>';
+                        content += '<div class="d-flex justify-content-around">';
+                        let itemID ='<div class="d-flex flex-column">  <b>Item ID</b>';
+                        let itemQuantity='<div class="d-flex flex-column"> <b>Item Quantity</b>';
+                        for(let i=0; i<response["query"]["total_items"];i++){
+                        
+                            let items = response["query"]["items"][i.toString()];
+
+                            itemID += '<p >'+ items["item_id"] +'</p>';
+                            itemQuantity += '<p >'+ items["item_quantity"]  +'</p>';
+                        }
+                        itemID += '</div>';
+                        itemQuantity+='</div>';
+                        content += itemID +itemQuantity +'</div>';
+                    }
+
+                    let remarks='<br><h6 class="p-1">Remarks :<hr></h6> {% autoescape off %}'+ response["query"]["remarks"]+'{% endautoescape %}';
+                    
+                    $("#model-body"+CheckoutId).html(content+remarks);
                 }
             }
 
