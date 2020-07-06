@@ -1,5 +1,4 @@
 import unittest
-from sport import models
 
 class TestMethods(unittest.TestCase):
     def test_add(self):
